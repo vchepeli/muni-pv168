@@ -1,0 +1,183 @@
+/* Catppuccin Macchiato Theme for Car Rental Manager */
+
+.root {
+    -fx-font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-base: #24273a;
+    -fx-control-inner-background: #24273a;
+    -fx-background-color: #24273a;
+    -fx-text-fill: #cad3f5;
+}
+
+/* Menu Bar */
+.menu-bar {
+    -fx-padding: 5 10 5 10;
+    -fx-background-color: #1e2030;
+    -fx-border-color: #363a52;
+    -fx-border-width: 0 0 1 0;
+}
+
+.menu-bar .label {
+    -fx-text-fill: #cad3f5;
+    -fx-font-weight: bold;
+}
+
+.menu-item:hover {
+    -fx-background-color: #363a52;
+}
+
+.context-menu {
+    -fx-background-color: #1e2030;
+    -fx-border-color: #363a52;
+    -fx-border-width: 1;
+}
+
+/* Buttons */
+.button {
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-background-color: #363a52;
+    -fx-text-fill: #cad3f5;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0, 0, 1);
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: #494d64;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);
+}
+
+.button:pressed {
+    -fx-background-color: #24273a;
+}
+
+/* Accent Button */
+.button.accent {
+    -fx-background-color: #c6a0f6; /* Mauve */
+    -fx-text-fill: #1e2030; /* Dark text for contrast */
+}
+
+.button.accent:hover {
+    -fx-background-color: #d9bbf9;
+}
+
+.button.danger {
+    -fx-background-color: #ed8796; /* Red/Flamingo */
+    -fx-text-fill: #1e2030;
+}
+
+.button.danger:hover {
+    -fx-background-color: #f09fae;
+}
+
+/* Tab Pane */
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #1e2030;
+    -fx-border-color: #363a52;
+    -fx-border-width: 0 0 1 0;
+}
+
+.tab {
+    -fx-background-color: transparent;
+    -fx-text-fill: #a5adcb;
+    -fx-padding: 10 20;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: transparent;
+}
+
+.tab:selected {
+    -fx-text-fill: #c6a0f6; /* Mauve */
+    -fx-border-color: #c6a0f6;
+}
+
+.tab:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tab-content-area {
+    -fx-padding: 20;
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: #1e2030;
+    -fx-border-color: #363a52;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #363a52;
+    -fx-background-radius: 6 6 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #cad3f5;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-background-color: #24273a;
+    -fx-border-color: transparent transparent #363a52 transparent;
+    -fx-text-fill: #cad3f5;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #2a2d42;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #363a52;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #494d64;
+    -fx-text-fill: #ffffff;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: #a5adcb;
+}
+
+/* Inputs */
+.text-field, .combo-box, .date-picker, .spinner {
+    -fx-background-color: #181926;
+    -fx-border-color: #5b6078;
+    -fx-border-radius: 4;
+    -fx-text-fill: #cad3f5;
+    -fx-padding: 8;
+}
+
+.text-field:focused, .combo-box:focused, .date-picker:focused, .spinner:focused {
+    -fx-border-color: #c6a0f6;
+    -fx-effect: dropshadow(three-pass-box, rgba(198, 160, 246, 0.2), 5, 0, 0, 0);
+}
+
+/* Dialogs */
+.dialog-pane {
+    -fx-background-color: #24273a;
+    -fx-border-color: #363a52;
+    -fx-border-width: 1;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #1e2030;
+    -fx-border-color: #363a52;
+    -fx-border-width: 0 0 1 0;
+}
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #c6a0f6;
+    -fx-font-size: 18px;
+}
+
+.label {
+    -fx-text-fill: #cad3f5;
+}

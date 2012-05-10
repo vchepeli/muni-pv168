@@ -1,0 +1,33 @@
+# Build artifacts
+build/
+target/
+*.class
+
+# Maven
+.m2/
+*.jar
+dependency-reduced-pom.xml
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+main.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.ldb
+
+# Compiled output
+*.o
+*.so

@@ -1,0 +1,66 @@
+May 22, 2012 10:50:42 PM cz.muni.fi.pv168.CustomerManagerImplementation addCustomer
+INFO: New Customer ID 7 added
+May 22, 2012 10:54:12 PM cz.muni.fi.pv168.CustomerManagerImplementation addCustomer
+INFO: New Customer ID 8 added
+Jun 05, 2012 9:08:40 AM cz.muni.fi.pv168.CustomerManagerImplementation getAllCustomers
+SEVERE: Error when getting all Customers
+org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (java.net.ConnectException : Error connecting to server localhost on port 1527 with message Connection refused: connect.)
+	at org.apache.commons.dbcp.BasicDataSource.createPoolableConnectionFactory(BasicDataSource.java:1549)
+	at org.apache.commons.dbcp.BasicDataSource.createDataSource(BasicDataSource.java:1388)
+	at org.apache.commons.dbcp.BasicDataSource.getConnection(BasicDataSource.java:1044)
+	at cz.muni.fi.pv168.CustomerManagerImplementation.getAllCustomers(CustomerManagerImplementation.java:122)
+	at cz.muni.fi.pv168.MainForm$CustomerSwingWorker.doInBackground(MainForm.java:122)
+	at cz.muni.fi.pv168.MainForm$CustomerSwingWorker.doInBackground(MainForm.java:70)
+	at javax.swing.SwingWorker$1.call(SwingWorker.java:296)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at javax.swing.SwingWorker.run(SwingWorker.java:335)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1110)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:603)
+	at java.lang.Thread.run(Thread.java:722)
+Caused by: java.sql.SQLNonTransientConnectionException: java.net.ConnectException : Error connecting to server localhost on port 1527 with message Connection refused: connect.
+	at org.apache.derby.client.am.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.client.am.SqlException.getSQLException(Unknown Source)
+	at org.apache.derby.jdbc.ClientDriver.connect(Unknown Source)
+	at org.apache.commons.dbcp.DriverConnectionFactory.createConnection(DriverConnectionFactory.java:38)
+	at org.apache.commons.dbcp.PoolableConnectionFactory.makeObject(PoolableConnectionFactory.java:582)
+	at org.apache.commons.dbcp.BasicDataSource.validateConnectionFactory(BasicDataSource.java:1556)
+	at org.apache.commons.dbcp.BasicDataSource.createPoolableConnectionFactory(BasicDataSource.java:1545)
+	... 12 more
+Caused by: org.apache.derby.client.am.DisconnectException: java.net.ConnectException : Error connecting to server localhost on port 1527 with message Connection refused: connect.
+	at org.apache.derby.client.net.NetAgent.<init>(Unknown Source)
+	at org.apache.derby.client.net.NetConnection.newAgent_(Unknown Source)
+	at org.apache.derby.client.am.Connection.<init>(Unknown Source)
+	at org.apache.derby.client.net.NetConnection.<init>(Unknown Source)
+	at org.apache.derby.client.net.NetConnection40.<init>(Unknown Source)
+	at org.apache.derby.client.net.ClientJDBCObjectFactoryImpl40.newNetConnection(Unknown Source)
+	... 17 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.DualStackPlainSocketImpl.connect0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:69)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:337)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:198)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:157)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:391)
+	at java.net.Socket.connect(Socket.java:579)
+	at java.net.Socket.connect(Socket.java:528)
+	at java.net.Socket.<init>(Socket.java:425)
+	at java.net.Socket.<init>(Socket.java:208)
+	at javax.net.DefaultSocketFactory.createSocket(SocketFactory.java:271)
+	at org.apache.derby.client.net.OpenSocketAction.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	... 23 more
+
+Jun 05, 2012 9:10:22 AM cz.muni.fi.pv168.CustomerManagerImplementation addCustomer
+INFO: New Customer ID 3 added
+Jun 07, 2012 8:35:51 AM cz.muni.fi.pv168.CustomerManagerImplementation removeCustomer
+INFO: Customer ID 3 removed
+Jun 07, 2012 8:36:23 AM cz.muni.fi.pv168.CustomerManagerImplementation updateCustomerInfo
+INFO: Customer ID 1 updated
+Jun 07, 2012 8:36:51 AM cz.muni.fi.pv168.CustomerManagerImplementation updateCustomerInfo
+INFO: Customer ID 1 updated
+Jun 07, 2012 8:39:49 AM cz.muni.fi.pv168.CustomerManagerImplementation addCustomer
+INFO: New Customer ID 4 added
+Jun 07, 2012 8:41:54 AM cz.muni.fi.pv168.CustomerManagerImplementation removeCustomer
+INFO: Customer ID 4 removed

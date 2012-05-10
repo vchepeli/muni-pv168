@@ -1,0 +1,10 @@
+----------------------------------------------------------------
+Thu May 10 20:10:53 CEST 2012:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-0137-37f2-4357-000000995590 
+on database directory memory:C:\Users\4epa\PV168-Projekt\CarRentalManagement\CarRentalDB  with class loader sun.misc.Launcher$AppClassLoader@209f4e 
+Loaded from file:/C:/Users/4epa/Documents/NetBeansProjects/Java/drivers/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_03-b05
+user.dir=C:\Users\4epa\PV168-Projekt\CarRentalManagement
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
