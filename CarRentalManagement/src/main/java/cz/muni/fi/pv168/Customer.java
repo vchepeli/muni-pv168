@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Instantiator;
 
 @Entity
 @Table(name = "customers")
@@ -31,6 +32,11 @@ public record Customer(
 ) {
     public Customer() {
         this(null, null, null, null, null, null, null);
+    }
+
+    @Instantiator
+    public static Customer of(Long id, String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {
+        return new Customer(id, firstName, lastName, address, phoneNumber, driversLicense, active);
     }
 
     public Customer withID(Long id) {

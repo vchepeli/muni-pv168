@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Instantiator;
 
 @Entity
 @Table(name = "cars")
@@ -28,6 +29,11 @@ public record Car(
 ) {
     public Car() {
         this(null, null, null, null, null, null);
+    }
+
+    @Instantiator
+    public static Car of(Long id, String model, String color, Boolean available, Double rentalPayment, String licensePlate) {
+        return new Car(id, model, color, available, rentalPayment, licensePlate);
     }
 
     public Car withID(Long id) {
