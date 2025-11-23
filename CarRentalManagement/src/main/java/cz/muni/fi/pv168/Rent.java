@@ -2,7 +2,10 @@ package cz.muni.fi.pv168;
 
 import java.sql.Date;
 import java.util.Objects;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "rents")
 public class Rent {
 
     public Rent() {
@@ -73,9 +76,20 @@ public class Rent {
         return hash;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long ID;
+
+    @Column(name = "rent_date")
     private Date rentDate;
+
+    @Column(name = "due_date")
     private Date dueDate;
+
+    @Column(name = "car")
     private Long carID;
+
+    @Column(name = "customer")
     private Long customerID;
 }

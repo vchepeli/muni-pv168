@@ -1,7 +1,10 @@
 package cz.muni.fi.pv168;
 
 import java.util.Objects;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "cars")
 public class Car {
 
     public Car() {
@@ -80,10 +83,23 @@ public class Car {
         return hash;
     }
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long ID;
+
+    @Column(name = "model")
     private String model;
+
+    @Column(name = "color")
     private String color;
+
+    @Column(name = "status")
     private Boolean available;
+
+    @Column(name = "payment")
     private Double rentalPayment;
+
+    @Column(name = "license_plate")
     private String licensePlate;
 }

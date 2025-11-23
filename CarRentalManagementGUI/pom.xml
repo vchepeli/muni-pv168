@@ -62,6 +62,13 @@
             <version>1.6</version>
         </dependency>
 
+        <!-- PostgreSQL Database Driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.1</version>
+        </dependency>
+
         <!-- Apache Derby Database -->
         <dependency>
             <groupId>org.apache.derby</groupId>
