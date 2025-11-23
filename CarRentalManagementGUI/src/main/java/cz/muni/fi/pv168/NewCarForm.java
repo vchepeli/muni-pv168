@@ -87,17 +87,15 @@ public class NewCarForm {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
                 try {
-                    Car car = new Car();
-                    car.setModel(modelField.getText());
-                    car.setColor(colorField.getText());
-                    car.setLicensePlate(licensePlateField.getText());
+                    double rentalPayment;
                     try {
-                        car.setRentalPayment(Double.parseDouble(priceField.getText()));
+                        rentalPayment = Double.parseDouble(priceField.getText());
                     } catch (NumberFormatException e) {
                         showError(localization.getString("invalid_input"),
                             localization.getString("price") + " " + localization.getString("must_be_number"));
                         return null;
                     }
+                    Car car = new Car(null, modelField.getText(), colorField.getText(), true, rentalPayment, licensePlateField.getText());
                     return car;
                 } catch (Exception e) {
                     showError(localization.getString("error"), e.getMessage());

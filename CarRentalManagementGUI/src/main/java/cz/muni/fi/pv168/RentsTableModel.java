@@ -29,7 +29,7 @@ public class RentsTableModel extends AbstractTableModel {
     public boolean hasNewRents()
     {
         for (Rent r : rents)
-            if (r.getID() == null)
+            if (r.ID() == null)
                 return true;
         
         return false;
@@ -101,15 +101,15 @@ public class RentsTableModel extends AbstractTableModel {
         Rent rent = rents.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                return rent.getID();
+                return rent.ID();
             case 1:
-                return rent.getCarID();
+                return rent.carID();
             case 2:
-                return rent.getCustomerID();
+                return rent.customerID();
             case 3:
-                return rent.getRentDate();
+                return rent.rentDate();
             case 4:
-                return rent.getDueDate();
+                return rent.dueDate();
             default:
                 throw new IllegalArgumentException("Column Index");
         }
@@ -121,22 +121,25 @@ public class RentsTableModel extends AbstractTableModel {
             throw new IllegalArgumentException("Row Index Out Of Bounds.");
         }
         Rent rent = rents.get(rowIndex);
+        Rent updatedRent = rent;
         switch (columnIndex) {
             case 1:
-                rent.setCarID((Long) aValue);
+                updatedRent = new Rent(rent.ID(), rent.rentDate(), rent.dueDate(), (Long) aValue, rent.customerID());
                 break;
             case 2:
-                rent.setCustomerID((Long) aValue);
+                updatedRent = new Rent(rent.ID(), rent.rentDate(), rent.dueDate(), rent.carID(), (Long) aValue);
                 break;
             case 3:
-                rent.setRentDate((Date) aValue);
+                updatedRent = new Rent(rent.ID(), (Date) aValue, rent.dueDate(), rent.carID(), rent.customerID());
                 break;
             case 4:
-                rent.setDueDate((Date) aValue);
+                updatedRent = new Rent(rent.ID(), rent.rentDate(), (Date) aValue, rent.carID(), rent.customerID());
                 break;
             default:
                 throw new IllegalArgumentException("Column Index");
         }
+        rents.set(rowIndex, updatedRent);
+        fireTableCellUpdated(rowIndex, columnIndex);
     }
 
     @Override
@@ -147,7 +150,7 @@ public class RentsTableModel extends AbstractTableModel {
 
         @Override
         public int compare(Rent rent1, Rent rent2) {
-            return Long.valueOf(rent1.getID()).compareTo(Long.valueOf(rent2.getID()));
+            return Long.valueOf(rent1.ID()).compareTo(Long.valueOf(rent2.ID()));
         }
     };
     
@@ -159,7 +162,7 @@ public class RentsTableModel extends AbstractTableModel {
 
     public void remove(Rent rent)
     {
-        if (rent != null && rent.getID() != null) {
+        if (rent != null && rent.ID() != null) {
             deletedRents.add(rent);
         }
     }

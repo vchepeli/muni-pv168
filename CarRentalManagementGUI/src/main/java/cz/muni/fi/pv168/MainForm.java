@@ -252,7 +252,7 @@ public class MainForm {
 
         TableColumn<Car, Long> idCol = new TableColumn<>(localization.getString("id"));
         idCol.setCellValueFactory(cellData ->
-            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().getID()));
+            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().ID()));
 
         TableColumn<Car, String> modelCol = new TableColumn<>(localization.getString("model"));
         modelCol.setCellValueFactory(cellData ->
@@ -294,7 +294,7 @@ public class MainForm {
                 deleteBtn.setOnAction(e -> {
                     Car car = getTableView().getItems().get(getIndex());
                     if (car != null) {
-                        if (car.getID() == null) {
+                        if (car.ID() == null) {
                             // New car not yet in database - remove immediately
                             getTableView().getItems().remove(car);
                             showInfo(localization.getString("info"), "Car removed from table.");
@@ -320,7 +320,7 @@ public class MainForm {
                 super.updateItem(item, empty);
                 if (!empty && item == null) {
                     Car car = getTableView().getItems().get(getIndex());
-                    if (car != null && car.getID() != null) {
+                    if (car != null && car.ID() != null) {
                         boolean isMarkedForDeletion = carsTableModel.getDeletedCars().contains(car);
                         deleteBtn.setText(isMarkedForDeletion ? "Undelete" : "Delete");
                     }
@@ -338,7 +338,7 @@ public class MainForm {
 
         TableColumn<Customer, Long> idCol = new TableColumn<>(localization.getString("id"));
         idCol.setCellValueFactory(cellData ->
-            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().getID()));
+            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().ID()));
 
         TableColumn<Customer, String> firstNameCol = new TableColumn<>(localization.getString("first_name"));
         firstNameCol.setCellValueFactory(cellData ->
@@ -380,7 +380,7 @@ public class MainForm {
                 deleteBtn.setOnAction(e -> {
                     Customer customer = getTableView().getItems().get(getIndex());
                     if (customer != null) {
-                        if (customer.getID() == null) {
+                        if (customer.ID() == null) {
                             // New customer not yet in database - remove immediately
                             getTableView().getItems().remove(customer);
                             showInfo(localization.getString("info"), "Customer removed from table.");
@@ -406,7 +406,7 @@ public class MainForm {
                 super.updateItem(item, empty);
                 if (!empty && item == null) {
                     Customer customer = getTableView().getItems().get(getIndex());
-                    if (customer != null && customer.getID() != null) {
+                    if (customer != null && customer.ID() != null) {
                         boolean isMarkedForDeletion = customersTableModel.getDeletedCustomers().contains(customer);
                         deleteBtn.setText(isMarkedForDeletion ? "Undelete" : "Delete");
                     }
@@ -424,7 +424,7 @@ public class MainForm {
 
         TableColumn<Rent, Long> idCol = new TableColumn<>(localization.getString("id"));
         idCol.setCellValueFactory(cellData ->
-            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().getID()));
+            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().ID()));
 
         TableColumn<Rent, Long> carIdCol = new TableColumn<>(localization.getString("car_id"));
         carIdCol.setCellValueFactory(cellData ->
@@ -462,7 +462,7 @@ public class MainForm {
                 deleteBtn.setOnAction(e -> {
                     Rent rent = getTableView().getItems().get(getIndex());
                     if (rent != null) {
-                        if (rent.getID() == null) {
+                        if (rent.ID() == null) {
                             // New rent not yet in database - remove immediately
                             getTableView().getItems().remove(rent);
                             showInfo(localization.getString("info"), "Rent removed from table.");
@@ -489,7 +489,7 @@ public class MainForm {
                 super.updateItem(item, empty);
                 if (!empty && item == null) {
                     Rent rent = getTableView().getItems().get(getIndex());
-                    if (rent != null && rent.getID() != null) {
+                    if (rent != null && rent.ID() != null) {
                         boolean isMarkedForDeletion = rentsTableModel.getDeletedRents().contains(rent);
                         deleteBtn.setText(isMarkedForDeletion ? "Undelete" : "Delete");
                     }
@@ -561,7 +561,7 @@ public class MainForm {
 
         // Add new cars
         for (Car car : carsTableModel.getCars()) {
-            if (car != null && car.getID() == null) {
+            if (car != null && car.ID() == null) {
                 try {
                     carManager.addCar(car);
                     addedCount++;
@@ -592,7 +592,7 @@ public class MainForm {
         for (Car car : deletedCarsCopy) {
             if (car != null) {
                 // Only delete from database if the car was actually saved (has an ID)
-                if (car.getID() != null) {
+                if (car.ID() != null) {
                     try {
                         carManager.removeCar(car);
                         deletedCount++;
@@ -627,7 +627,7 @@ public class MainForm {
 
         // Add new customers
         for (Customer customer : customersTableModel.getCustomers()) {
-            if (customer != null && customer.getID() == null) {
+            if (customer != null && customer.ID() == null) {
                 try {
                     customerManager.addCustomer(customer);
                     addedCount++;
@@ -658,7 +658,7 @@ public class MainForm {
         for (Customer customer : deletedCustomersCopy) {
             if (customer != null) {
                 // Only delete from database if the customer was actually saved (has an ID)
-                if (customer.getID() != null) {
+                if (customer.ID() != null) {
                     try {
                         customerManager.removeCustomer(customer);
                         deletedCount++;
@@ -692,11 +692,11 @@ public class MainForm {
 
         // Add new rents
         for (Rent rent : rentsTableModel.getRents()) {
-            if (rent != null && rent.getID() == null) {
+            if (rent != null && rent.ID() == null) {
                 try {
                     // Load Car and Customer objects from database
-                    Car car = carManager.findCarByID(rent.getCarID());
-                    Customer customer = customerManager.findCustomerByID(rent.getCustomerID());
+                    Car car = carManager.findCarByID(rent.carID());
+                    Customer customer = customerManager.findCustomerByID(rent.customerID());
 
                     if (car == null || customer == null) {
                         showAlert(localization.getString("error"),
@@ -705,7 +705,7 @@ public class MainForm {
                     }
 
                     // Call rentCarToCustomer with loaded objects
-                    rentManager.rentCarToCustomer(car, customer, rent.getRentDate(), rent.getDueDate());
+                    rentManager.rentCarToCustomer(car, customer, rent.rentDate(), rent.dueDate());
                     addedCount++;
                 } catch (Exception ex) {
                     showAlert(localization.getString("error"),
@@ -719,11 +719,11 @@ public class MainForm {
         for (Rent rent : deletedRentsCopy) {
             if (rent != null) {
                 // Only delete from database if the rent was actually saved (has an ID)
-                if (rent.getID() != null) {
+                if (rent.ID() != null) {
                     try {
                         rentManager.getCarFromCustomer(
-                            carManager.findCarByID(rent.getCarID()),
-                            customerManager.findCustomerByID(rent.getCustomerID())
+                            carManager.findCarByID(rent.carID()),
+                            customerManager.findCustomerByID(rent.customerID())
                         );
                         deletedCount++;
                     } catch (Exception ex) {
@@ -768,7 +768,7 @@ public class MainForm {
             long id = Long.parseLong(idStr);
             Car carToRemove = null;
             for (Car car : carsTableModel.getCars()) {
-                if (car != null && car.getID() != null && car.getID().longValue() == id) {
+                if (car != null && car.ID() != null && car.ID().longValue() == id) {
                     carToRemove = car;
                     break;
                 }
@@ -792,7 +792,7 @@ public class MainForm {
             long id = Long.parseLong(idStr);
             Customer customerToRemove = null;
             for (Customer customer : customersTableModel.getCustomers()) {
-                if (customer != null && customer.getID() != null && customer.getID().longValue() == id) {
+                if (customer != null && customer.ID() != null && customer.ID().longValue() == id) {
                     customerToRemove = customer;
                     break;
                 }
@@ -816,7 +816,7 @@ public class MainForm {
             long id = Long.parseLong(idStr);
             Rent rentToRemove = null;
             for (Rent rent : rentsTableModel.getRents()) {
-                if (rent != null && rent.getID() != null && rent.getID().longValue() == id) {
+                if (rent != null && rent.ID() != null && rent.ID().longValue() == id) {
                     rentToRemove = rent;
                     break;
                 }
@@ -936,19 +936,19 @@ public class MainForm {
         content.setPadding(new Insets(15));
         content.setStyle("-fx-spacing: 10; -fx-background-color: #252526;");
 
-        TextField modelField = new TextField(car.getModel() != null ? car.getModel() : "");
+        TextField modelField = new TextField(car.model() != null ? car.model() : "");
         modelField.setPromptText("Model");
         modelField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a;");
 
-        TextField colorField = new TextField(car.getColor() != null ? car.getColor() : "");
+        TextField colorField = new TextField(car.color() != null ? car.color() : "");
         colorField.setPromptText("Color");
         colorField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a;");
 
-        TextField licensePlateField = new TextField(car.getLicensePlate() != null ? car.getLicensePlate() : "");
+        TextField licensePlateField = new TextField(car.licensePlate() != null ? car.licensePlate() : "");
         licensePlateField.setPromptText("License Plate");
         licensePlateField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a;");
 
-        TextField priceField = new TextField(car.getRentalPayment() != null ? car.getRentalPayment().toString() : "");
+        TextField priceField = new TextField(car.rentalPayment() != null ? car.rentalPayment().toString() : "");
         priceField.setPromptText("Rental Price");
         priceField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a;");
 
@@ -986,7 +986,7 @@ public class MainForm {
 
                 carsTableModel.carResolved(car);
                 carsTableModel.carResolved(car); // Remove from both sets first
-                if (car.getID() != null) {
+                if (car.ID() != null) {
                     carsTableModel.markCarForUpdate(car);
                 }
 
@@ -1007,23 +1007,23 @@ public class MainForm {
         content.setPadding(new Insets(15));
         content.setStyle("-fx-spacing: 10; -fx-background-color: #252526;");
 
-        TextField firstNameField = new TextField(customer.getFirstName() != null ? customer.getFirstName() : "");
+        TextField firstNameField = new TextField(customer.firstName() != null ? customer.firstName() : "");
         firstNameField.setPromptText("First Name");
         firstNameField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a;");
 
-        TextField lastNameField = new TextField(customer.getLastName() != null ? customer.getLastName() : "");
+        TextField lastNameField = new TextField(customer.lastName() != null ? customer.lastName() : "");
         lastNameField.setPromptText("Last Name");
         lastNameField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a;");
 
-        TextField addressField = new TextField(customer.getAddress() != null ? customer.getAddress() : "");
+        TextField addressField = new TextField(customer.address() != null ? customer.address() : "");
         addressField.setPromptText("Address");
         addressField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a;");
 
-        TextField phoneField = new TextField(customer.getPhoneNumber() != null ? customer.getPhoneNumber() : "");
+        TextField phoneField = new TextField(customer.phoneNumber() != null ? customer.phoneNumber() : "");
         phoneField.setPromptText("Phone Number");
         phoneField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a;");
 
-        TextField licenseField = new TextField(customer.getDriversLicense() != null ? customer.getDriversLicense() : "");
+        TextField licenseField = new TextField(customer.driversLicense() != null ? customer.driversLicense() : "");
         licenseField.setPromptText("Driver's License");
         licenseField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a;");
 
@@ -1063,7 +1063,7 @@ public class MainForm {
             customer.setDriversLicense(licenseField.getText());
 
             customersTableModel.customerResolved(customer);
-            if (customer.getID() != null) {
+            if (customer.ID() != null) {
                 customersTableModel.markCustomerForUpdate(customer);
             }
 
@@ -1081,12 +1081,12 @@ public class MainForm {
         content.setPadding(new Insets(15));
         content.setStyle("-fx-spacing: 10; -fx-background-color: #252526;");
 
-        TextField carIdField = new TextField(rent.getCarID() != null ? rent.getCarID().toString() : "");
+        TextField carIdField = new TextField(rent.carID() != null ? rent.carID().toString() : "");
         carIdField.setPromptText("Car ID");
         carIdField.setDisable(true);
         carIdField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a; -fx-opacity: 0.7;");
 
-        TextField customerIdField = new TextField(rent.getCustomerID() != null ? rent.getCustomerID().toString() : "");
+        TextField customerIdField = new TextField(rent.customerID() != null ? rent.customerID().toString() : "");
         customerIdField.setPromptText("Customer ID");
         customerIdField.setDisable(true);
         customerIdField.setStyle("-fx-padding: 8; -fx-font-size: 12; -fx-background-color: #45475a; -fx-text-fill: #cdd6f4; -fx-control-inner-background: #45475a; -fx-opacity: 0.7;");

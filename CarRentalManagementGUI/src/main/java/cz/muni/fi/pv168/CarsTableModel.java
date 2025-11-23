@@ -29,7 +29,7 @@ public class CarsTableModel extends AbstractTableModel {
     public boolean hasNewCars()
     {
         for (Car c : cars)
-            if (c.getID() == null)
+            if (c.ID() == null)
                 return true;
         
         return false;
@@ -43,7 +43,7 @@ public class CarsTableModel extends AbstractTableModel {
 
     public void markCarForUpdate(Car car)
     {
-        if (car != null && car.getID() != null) {
+        if (car != null && car.ID() != null) {
             updatedCars.add(car);
         }
     }
@@ -127,17 +127,17 @@ public class CarsTableModel extends AbstractTableModel {
         Car car = ((rowIndex == cars.size()) ? new Car() : cars.get(rowIndex));
         switch (columnIndex) {
             case 0:
-                return car.getID();
+                return car.ID();
             case 1:
-                return car.getModel();
+                return car.model();
             case 2:
-                return car.getColor();
+                return car.color();
             case 3:
-                return car.getLicensePlate();
+                return car.licensePlate();
             case 4:
-                return car.getRentalPayment();
+                return car.rentalPayment();
             case 5:
-                return car.getAvailable();
+                return car.available();
             default:
                 throw new IllegalArgumentException("Column Index");
         }
@@ -151,43 +151,44 @@ public class CarsTableModel extends AbstractTableModel {
         }
         else if (rowIndex == cars.size())
         {
-            car = new Car();
+            car = new Car(null, null, null, null, null, null);
             add(car);
         }
         else
             car = cars.get(rowIndex);
+
+        Car updatedCar = car;
         switch (columnIndex) {
             case 1:
             {
-                if (car.getID() != null)
-                    updatedCars.add(car);
-                car.setModel((String) aValue);
+                updatedCar = new Car(car.ID(), (String) aValue, car.color(), car.available(), car.rentalPayment(), car.licensePlate());
                 break;
             }
             case 2:
             {
-                if (car.getID() != null)
-                    updatedCars.add(car);
-                car.setColor((String) aValue);
+                updatedCar = new Car(car.ID(), car.model(), (String) aValue, car.available(), car.rentalPayment(), car.licensePlate());
                 break;
             }
             case 3:
             {
-                if (car.getID() != null)
-                    updatedCars.add(car);
-                car.setLicensePlate((String) aValue);
+                updatedCar = new Car(car.ID(), car.model(), car.color(), car.available(), car.rentalPayment(), (String) aValue);
                 break;
             }
             case 4:
             {
-                if (car.getID() != null)
-                    updatedCars.add(car);
-                car.setRentalPayment((Double) aValue);
+                updatedCar = new Car(car.ID(), car.model(), car.color(), car.available(), (Double) aValue, car.licensePlate());
                 break;
             }
             default:
                 throw new IllegalArgumentException("Column Index");
         }
+
+        if (updatedCar.ID() != null) {
+            updatedCars.remove(car);
+            updatedCars.add(updatedCar);
+        }
+        cars.set(rowIndex, updatedCar);
+        fireTableCellUpdated(rowIndex, columnIndex);
     }
 
     @Override
@@ -198,20 +199,20 @@ public class CarsTableModel extends AbstractTableModel {
 
         @Override
         public int compare(Car car1, Car car2) {
-            return Long.valueOf(car1.getID()).compareTo(Long.valueOf(car2.getID()));
+            return Long.valueOf(car1.ID()).compareTo(Long.valueOf(car2.ID()));
         }
     };
     
     public void add(Car car)
     {
-        car.setStatus(true);
+        car = car.withStatus(true);
         cars.add(car);
         fireTableRowsInserted((cars.size() - 1), cars.size());
     }
 
     public void remove(Car car)
     {
-        if (car != null && car.getID() != null) {
+        if (car != null && car.ID() != null) {
             deletedCars.add(car);
             updatedCars.remove(car);
         }

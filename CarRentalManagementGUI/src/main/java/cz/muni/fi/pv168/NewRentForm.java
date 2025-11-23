@@ -97,19 +97,14 @@ public class NewRentForm {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
                 try {
-                    Rent rent = new Rent();
-                    rent.setCarID((long) carIdSpinner.getValue());
-                    rent.setCustomerID((long) customerIdSpinner.getValue());
-
                     LocalDate localDate = rentDatePicker.getValue();
                     Date rentDate = Date.valueOf(localDate);
-                    rent.setRentDate(rentDate);
 
                     // Calculate due date
                     LocalDate dueLocalDate = localDate.plusDays(durationSpinner.getValue());
                     Date dueDate = Date.valueOf(dueLocalDate);
-                    rent.setDueDate(dueDate);
 
+                    Rent rent = new Rent(null, rentDate, dueDate, (long) carIdSpinner.getValue(), (long) customerIdSpinner.getValue());
                     return rent;
                 } catch (Exception e) {
                     showError(localization.getString("error"), e.getMessage());

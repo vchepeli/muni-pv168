@@ -29,7 +29,7 @@ public class CustomersTableModel extends AbstractTableModel {
     public boolean hasNewCustomers()
     {
         for (Customer c : customers)
-            if (c.getID() == null)
+            if (c.ID() == null)
                 return true;
         
         return false;
@@ -43,7 +43,7 @@ public class CustomersTableModel extends AbstractTableModel {
 
     public void markCustomerForUpdate(Customer customer)
     {
-        if (customer != null && customer.getID() != null) {
+        if (customer != null && customer.ID() != null) {
             updatedCustomers.add(customer);
         }
     }
@@ -128,19 +128,19 @@ public class CustomersTableModel extends AbstractTableModel {
         Customer customer = ((rowIndex == customers.size()) ? new Customer() : customers.get(rowIndex));
         switch (columnIndex) {
             case 0:
-                return customer.getID();
+                return customer.ID();
             case 1:
-                return customer.getFirstName();
+                return customer.firstName();
             case 2:
-                return customer.getLastName();
+                return customer.lastName();
             case 3:
-                return customer.getAddress();
+                return customer.address();
             case 4:
-                return customer.getPhoneNumber();
+                return customer.phoneNumber();
             case 5:
-                return customer.getDriversLicense();
+                return customer.driversLicense();
             case 6:
-                return customer.getActive();
+                return customer.active();
             default:
                 throw new IllegalArgumentException("Column Index");
         }
@@ -154,50 +154,49 @@ public class CustomersTableModel extends AbstractTableModel {
         }
         else if (rowIndex == customers.size())
         {
-            customer = new Customer();
+            customer = new Customer(null, null, null, null, null, null, false);
             add(customer);
         }
         else
             customer = customers.get(rowIndex);
+
+        Customer updatedCustomer = customer;
         switch (columnIndex) {
             case 1:
             {
-                if (customer.getID() != null)
-                    updatedCustomers.add(customer);
-                customer.setFirstName((String) aValue);
+                updatedCustomer = new Customer(customer.ID(), (String) aValue, customer.lastName(), customer.address(), customer.phoneNumber(), customer.driversLicense(), customer.active());
                 break;
             }
             case 2:
             {
-                if (customer.getID() != null)
-                    updatedCustomers.add(customer);
-                customer.setLastName((String) aValue);
+                updatedCustomer = new Customer(customer.ID(), customer.firstName(), (String) aValue, customer.address(), customer.phoneNumber(), customer.driversLicense(), customer.active());
                 break;
             }
             case 3:
             {
-                if (customer.getID() != null)
-                    updatedCustomers.add(customer);
-                customer.setAddress((String) aValue);
+                updatedCustomer = new Customer(customer.ID(), customer.firstName(), customer.lastName(), (String) aValue, customer.phoneNumber(), customer.driversLicense(), customer.active());
                 break;
             }
             case 4:
             {
-                if (customer.getID() != null)
-                    updatedCustomers.add(customer);
-                customer.setPhoneNumber((String) aValue);
+                updatedCustomer = new Customer(customer.ID(), customer.firstName(), customer.lastName(), customer.address(), (String) aValue, customer.driversLicense(), customer.active());
                 break;
             }
             case 5:
             {
-                if (customer.getID() != null)
-                    updatedCustomers.add(customer);
-                customer.setDriversLicense((String) aValue);
+                updatedCustomer = new Customer(customer.ID(), customer.firstName(), customer.lastName(), customer.address(), customer.phoneNumber(), (String) aValue, customer.active());
                 break;
             }
             default:
                 throw new IllegalArgumentException("Column Index");
         }
+
+        if (updatedCustomer.ID() != null) {
+            updatedCustomers.remove(customer);
+            updatedCustomers.add(updatedCustomer);
+        }
+        customers.set(rowIndex, updatedCustomer);
+        fireTableCellUpdated(rowIndex, columnIndex);
     }
 
     @Override
@@ -208,20 +207,20 @@ public class CustomersTableModel extends AbstractTableModel {
 
         @Override
         public int compare(Customer customer1, Customer customer2) {
-            return Long.valueOf(customer1.getID()).compareTo(Long.valueOf(customer2.getID()));
+            return Long.valueOf(customer1.ID()).compareTo(Long.valueOf(customer2.ID()));
         }
     };
     
     public void add(Customer customer)
     {
-        customer.setActive(false);
+        customer = customer.withActive(false);
         customers.add(customer);
         fireTableRowsInserted((customers.size() - 1), customers.size());
     }
 
     public void remove(Customer customer)
     {
-        if (customer != null && customer.getID() != null) {
+        if (customer != null && customer.ID() != null) {
             deletedCustomers.add(customer);
             updatedCustomers.remove(customer);
         }
