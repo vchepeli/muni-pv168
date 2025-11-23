@@ -85,7 +85,7 @@ public class CustomerManagerImplementation implements CustomerManager {
     }
 
     @Override
-    public Customer findCustomerByID(Long ID) throws IllegalArgumentException, TransactionException {
+    public Customer findCustomerByID(String ID) throws IllegalArgumentException, TransactionException {
         if (null == ID) {
             throw new IllegalArgumentException("Can't find Customer with NULL ID");
         }

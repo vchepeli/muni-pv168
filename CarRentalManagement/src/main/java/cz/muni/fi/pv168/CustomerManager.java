@@ -10,7 +10,7 @@ public interface CustomerManager {
 
     public void removeCustomer(Customer customer) throws IllegalArgumentException, TransactionException;
 
-    public Customer findCustomerByID(Long ID) throws IllegalArgumentException, TransactionException;
+    public Customer findCustomerByID(String ID) throws IllegalArgumentException, TransactionException;
 
     public List<Customer> getAllCustomers() throws IllegalArgumentException, TransactionException;
 

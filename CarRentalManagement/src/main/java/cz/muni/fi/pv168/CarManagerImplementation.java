@@ -87,7 +87,7 @@ public class CarManagerImplementation implements CarManager {
     }
 
     @Override
-    public Car findCarByID(Long ID) throws TransactionException {
+    public Car findCarByID(String ID) throws TransactionException {
         //Check if the Argument is valid:
         if (null == ID) {
             throw new IllegalArgumentException("Can't locate Car with null ID");

@@ -10,7 +10,7 @@ public interface CarManager {
 
     public void removeCar(Car car) throws TransactionException;
 
-    public Car findCarByID(Long ID) throws TransactionException;
+    public Car findCarByID(String ID) throws TransactionException;
 
     public void updateCarInfo(Car car) throws TransactionException;
 
