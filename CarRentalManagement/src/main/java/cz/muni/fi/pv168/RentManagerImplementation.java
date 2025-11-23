@@ -147,19 +147,13 @@ public class RentManagerImplementation implements RentManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            Rent rent = new Rent();
-            rent.setCarID(car.getID());
-            rent.setCustomerID(customer.getID());
-            rent.setRentDate(rentDate);
-            rent.setDueDate(dueDate);
+            Rent rent = new Rent(null, rentDate, dueDate, car.getID(), customer.getID());
             session.persist(rent);
             transaction.commit();
-            logger.log(Level.INFO, ("New Rent ID " + rent.getID() + " added"));
+            logger.log(Level.INFO, ("New Rent ID " + rent.ID() + " added"));
 
-            car.setStatus(Boolean.FALSE);
-            customer.setActive(Boolean.TRUE);
-            carManager.updateCarInfo(car);
-            customerManager.updateCustomerInfo(customer);
+            carManager.updateCarInfo(car.withStatus(Boolean.FALSE));
+            customerManager.updateCustomerInfo(customer.withActive(Boolean.TRUE));
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -201,11 +195,11 @@ public class RentManagerImplementation implements RentManager {
             transaction.commit();
 
             if (getAllCustomerCars(customer).isEmpty()) {
-                customer.setActive(Boolean.FALSE);
+                customerManager.updateCustomerInfo(customer.withActive(Boolean.FALSE));
+            } else {
+                customerManager.updateCustomerInfo(customer);
             }
-            car.setStatus(true);
-            customerManager.updateCustomerInfo(customer);
-            carManager.updateCarInfo(car);
+            carManager.updateCarInfo(car.withStatus(true));
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
