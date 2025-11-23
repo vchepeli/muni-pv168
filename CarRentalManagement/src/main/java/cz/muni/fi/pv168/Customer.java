@@ -1,7 +1,6 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -38,11 +37,11 @@ public record Customer(
     }
 
     /**
-     * Instantiator method for Hibernate record instantiation.
+     * Compact constructor for record validation.
+     * Hibernate 6.x will use this for instantiation when loading from database.
      */
-    @Instantiator
-    public static Customer of(String ID, String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {
-        return new Customer(ID, firstName, lastName, address, phoneNumber, driversLicense, active);
+    public Customer {
+        // Validation logic can be added here if needed
     }
 
     public Customer withID(String id) {
