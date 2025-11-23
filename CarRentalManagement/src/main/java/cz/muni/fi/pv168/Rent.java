@@ -2,48 +2,41 @@ package cz.muni.fi.pv168;
 
 import java.sql.Date;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Instantiator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import java.util.UUID;
 
 @Entity
 @Table(name = "rents")
-public record Rent(
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Accessors(fluent = true)
+public class Rent {
     @Id
     @Column(name = "id")
-    String ID,
+    private String ID;
 
     @Column(name = "rent_date")
-    Date rentDate,
+    private Date rentDate;
 
     @Column(name = "due_date")
-    Date dueDate,
+    private Date dueDate;
 
     @Column(name = "car")
-    String carID,
+    private String carID;
 
     @Column(name = "customer")
-    String customerID
-) {
+    private String customerID;
+
     /**
      * Factory method for creating new Rent instances with auto-generated UUID.
      * Use this when creating rents to be saved to the database.
      */
     public static Rent create(Date rentDate, Date dueDate, String carID, String customerID) {
         return new Rent(UUID.randomUUID().toString(), rentDate, dueDate, carID, customerID);
-    }
-
-    /**
-     * Canonical constructor for Hibernate instantiation.
-     * This explicit constructor tells Hibernate how to instantiate Rent records
-     * when loading from the database.
-     */
-    @Instantiator
-    public Rent(String ID, Date rentDate, Date dueDate, String carID, String customerID) {
-        this.ID = ID;
-        this.rentDate = rentDate;
-        this.dueDate = dueDate;
-        this.carID = carID;
-        this.customerID = customerID;
     }
 
     public Rent withID(String id) {

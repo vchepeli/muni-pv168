@@ -1,56 +1,47 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Instantiator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import java.util.UUID;
 
 @Entity
 @Table(name = "customers")
-public record Customer(
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Accessors(fluent = true)
+public class Customer {
     @Id
     @Column(name = "id")
-    String ID,
+    private String ID;
 
     @Column(name = "first_name")
-    String firstName,
+    private String firstName;
 
     @Column(name = "last_name")
-    String lastName,
+    private String lastName;
 
     @Column(name = "address")
-    String address,
+    private String address;
 
     @Column(name = "phone_number")
-    String phoneNumber,
+    private String phoneNumber;
 
     @Column(name = "drivers_license")
-    String driversLicense,
+    private String driversLicense;
 
     @Column(name = "status")
-    Boolean active
-) {
+    private Boolean active;
+
     /**
      * Factory method for creating new Customer instances with auto-generated UUID.
      * Use this when creating customers to be saved to the database.
      */
     public static Customer create(String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {
         return new Customer(UUID.randomUUID().toString(), firstName, lastName, address, phoneNumber, driversLicense, active);
-    }
-
-    /**
-     * Canonical constructor for Hibernate instantiation.
-     * This explicit constructor tells Hibernate how to instantiate Customer records
-     * when loading from the database.
-     */
-    @Instantiator
-    public Customer(String ID, String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {
-        this.ID = ID;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.driversLicense = driversLicense;
-        this.active = active;
     }
 
     public Customer withID(String id) {

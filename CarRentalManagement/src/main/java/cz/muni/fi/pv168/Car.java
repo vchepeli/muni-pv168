@@ -1,52 +1,44 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Instantiator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import java.util.UUID;
 
 @Entity
 @Table(name = "cars")
-public record Car(
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Accessors(fluent = true)
+public class Car {
     @Id
     @Column(name = "id")
-    String ID,
+    private String ID;
 
     @Column(name = "model")
-    String model,
+    private String model;
 
     @Column(name = "color")
-    String color,
+    private String color;
 
     @Column(name = "status")
-    Boolean available,
+    private Boolean available;
 
     @Column(name = "payment")
-    Double rentalPayment,
+    private Double rentalPayment;
 
     @Column(name = "license_plate")
-    String licensePlate
-) {
+    private String licensePlate;
+
     /**
      * Factory method for creating new Car instances with auto-generated UUID.
      * Use this when creating cars to be saved to the database.
      */
     public static Car create(String model, String color, Boolean available, Double rentalPayment, String licensePlate) {
         return new Car(UUID.randomUUID().toString(), model, color, available, rentalPayment, licensePlate);
-    }
-
-    /**
-     * Canonical constructor for Hibernate instantiation.
-     * This explicit constructor tells Hibernate how to instantiate Car records
-     * when loading from the database.
-     */
-    @Instantiator
-    public Car(String ID, String model, String color, Boolean available, Double rentalPayment, String licensePlate) {
-        this.ID = ID;
-        this.model = model;
-        this.color = color;
-        this.available = available;
-        this.rentalPayment = rentalPayment;
-        this.licensePlate = licensePlate;
     }
 
     public Car withID(String id) {
