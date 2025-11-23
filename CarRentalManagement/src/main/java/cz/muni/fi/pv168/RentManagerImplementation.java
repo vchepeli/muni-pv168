@@ -147,6 +147,17 @@ public class RentManagerImplementation implements RentManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
+
+            // Validate that both car and customer exist in database before persisting rent
+            Car existingCar = session.get(Car.class, car.ID());
+            if (existingCar == null) {
+                throw new TransactionException("Car with ID " + car.ID() + " does not exist in DB");
+            }
+            Customer existingCustomer = session.get(Customer.class, customer.ID());
+            if (existingCustomer == null) {
+                throw new TransactionException("Customer with ID " + customer.ID() + " does not exist in DB");
+            }
+
             Rent rent = Rent.create(rentDate, dueDate, car.ID(), customer.ID());
             session.persist(rent);
             transaction.commit();
