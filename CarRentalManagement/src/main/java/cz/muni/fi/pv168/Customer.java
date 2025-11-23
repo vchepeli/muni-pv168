@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -28,6 +29,9 @@ public record Customer(
     @Column(name = "status")
     Boolean active
 ) {
+    @Instantiator
+    public Customer {}
+
     /**
      * Factory method for creating new Customer instances with auto-generated UUID.
      * Use this when creating customers to be saved to the database.

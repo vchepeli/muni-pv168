@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -25,6 +26,8 @@ public record Car(
     @Column(name = "license_plate")
     String licensePlate
 ) {
+    @Instantiator
+    public Car {}
     /**
      * Factory method for creating new Car instances with auto-generated UUID.
      * Use this when creating cars to be saved to the database.

@@ -2,6 +2,7 @@ package cz.muni.fi.pv168;
 
 import java.sql.Date;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +24,9 @@ public record Rent(
     @Column(name = "customer")
     String customerID
 ) {
+    @Instantiator
+    public Rent {}
+
     /**
      * Factory method for creating new Rent instances with auto-generated UUID.
      * Use this when creating rents to be saved to the database.
