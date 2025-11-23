@@ -44,4 +44,24 @@ public record Customer(
     public Customer withActive(Boolean status) {
         return new Customer(ID, firstName, lastName, address, phoneNumber, driversLicense, status);
     }
+
+    public Customer withAddress(String newAddress) {
+        return new Customer(ID, firstName, lastName, newAddress, phoneNumber, driversLicense, active);
+    }
+
+    public Customer withFirstName(String newFirstName) {
+        return new Customer(ID, newFirstName, lastName, address, phoneNumber, driversLicense, active);
+    }
+
+    public Customer withLastName(String newLastName) {
+        return new Customer(ID, firstName, newLastName, address, phoneNumber, driversLicense, active);
+    }
+
+    public Customer withPhoneNumber(String newPhoneNumber) {
+        return new Customer(ID, firstName, lastName, address, newPhoneNumber, driversLicense, active);
+    }
+
+    public Customer withDriversLicense(String newDriversLicense) {
+        return new Customer(ID, firstName, lastName, address, phoneNumber, newDriversLicense, active);
+    }
 }

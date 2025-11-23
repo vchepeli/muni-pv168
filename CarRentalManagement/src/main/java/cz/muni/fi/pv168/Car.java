@@ -41,4 +41,20 @@ public record Car(
     public Car withStatus(Boolean status) {
         return new Car(ID, model, color, status, rentalPayment, licensePlate);
     }
+
+    public Car withColor(String newColor) {
+        return new Car(ID, model, newColor, available, rentalPayment, licensePlate);
+    }
+
+    public Car withModel(String newModel) {
+        return new Car(ID, newModel, color, available, rentalPayment, licensePlate);
+    }
+
+    public Car withLicensePlate(String newLicensePlate) {
+        return new Car(ID, model, color, available, rentalPayment, newLicensePlate);
+    }
+
+    public Car withRentalPayment(Double newRentalPayment) {
+        return new Car(ID, model, color, available, newRentalPayment, licensePlate);
+    }
 }

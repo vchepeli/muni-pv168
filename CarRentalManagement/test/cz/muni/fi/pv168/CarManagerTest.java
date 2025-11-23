@@ -1,30 +1,44 @@
 package cz.muni.fi.pv168;
 
-import java.sql.SQLException;
 import java.util.*;
-import javax.sql.DataSource;
-import org.apache.commons.dbcp.BasicDataSource;
+import java.util.UUID;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.hibernate.Session;
 
 public class CarManagerTest {
 
     private CarManager manager;
-    private DataSource dataSource;
 
     @Before
-    public void setUp() throws SQLException {
-        dataSource = prepareDataSource();
-        DBUtils.createTables(dataSource);
+    public void setUp() {
         manager = new CarManagerImplementation();
-        manager.setDataSource(dataSource);
+        // Create tables via Hibernate auto-creation
+        manager.tryCreateTables();
+        // Clean up any existing data
+        cleanupDatabase();
     }
 
     @After
-    public void tearDown() throws SQLException {
-        DBUtils.dropTables(dataSource);
+    public void tearDown() {
+        cleanupDatabase();
+    }
+
+    private void cleanupDatabase() {
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        try {
+            session.beginTransaction();
+            session.createMutationQuery("DELETE FROM Rent").executeUpdate();
+            session.createMutationQuery("DELETE FROM Car").executeUpdate();
+            session.createMutationQuery("DELETE FROM Customer").executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
     }
 
     @Test
@@ -33,9 +47,9 @@ public class CarManagerTest {
 
         manager.addCar(car);
 
-        Long id = car.getID();
+        String id = car.ID();
         assertNotNull(id);
-        assertTrue(car.getAvailable());
+        assertTrue(car.available());
 
         Car result = manager.findCarByID(id);
         assertEquals(car, result);
@@ -45,10 +59,10 @@ public class CarManagerTest {
 
     @Test
     public void findCarByID() {
-        assertNull(manager.findCarByID(1l));
+        assertNull(manager.findCarByID("non-existent-id"));
         Car car = newCar("Black", "0B6 6835", "Škoda", 200.0);
         manager.addCar(car);
-        Long id = car.getID();
+        String id = car.ID();
 
         Car result = manager.findCarByID(id);
         assertEquals(car, result);
@@ -63,36 +77,39 @@ public class CarManagerTest {
         } catch (IllegalArgumentException e) {
         }
 
-        Car car = newCar("Black", "0B6 6835", "Škoda", 200.0);
-        car.setID(1l);
+        Car car = newCar("Black", "0B6 6835", "Škoda", 200.0).withID(null);
         try {
             manager.addCar(car);
             fail();
         } catch (IllegalArgumentException e) {
         }
 
-        car = newCar(null, "0B6 6835", "Škoda", 200.0);
+        // Test with null color
         try {
-            manager.addCar(car);
+            Car nullColorCar = new Car(UUID.randomUUID().toString(), "Škoda", null, true, 200.0, "0B6 6835");
+            manager.addCar(nullColorCar);
             fail();
         } catch (IllegalArgumentException e) {
         }
 
-        car = newCar("Black", null, "Škoda", 200.0);
+        // Test with null license plate
         try {
-            manager.addCar(car);
+            Car nullPlateCar = new Car(UUID.randomUUID().toString(), "Škoda", "Black", true, 200.0, null);
+            manager.addCar(nullPlateCar);
             fail();
         } catch (IllegalArgumentException e) {
         }
 
-        car = newCar("Black", "0B6 6835", null, 200.0);
+        // Test with null model
         try {
-            manager.addCar(car);
+            Car nullModelCar = new Car(UUID.randomUUID().toString(), null, "Black", true, 200.0, "0B6 6835");
+            manager.addCar(nullModelCar);
             fail();
         } catch (IllegalArgumentException e) {
         }
 
-        car = newCar("Black", "0B6 6835", "Škoda", (-1.0));
+        // Test with negative payment
+        car = newCar("Black", "0B6 6835", "Škoda", -1.0);
         try {
             manager.addCar(car);
             fail();
@@ -103,7 +120,7 @@ public class CarManagerTest {
         try {
             manager.addCar(car);
 
-            Car result = manager.findCarByID(car.getID());
+            Car result = manager.findCarByID(car.ID());
             assertNotNull(result);
         } catch (IllegalArgumentException e) {
             fail();
@@ -118,13 +135,13 @@ public class CarManagerTest {
         manager.addCar(car1);
         manager.addCar(car2);
 
-        assertNotNull(manager.findCarByID(car1.getID()));
-        assertNotNull(manager.findCarByID(car2.getID()));
+        assertNotNull(manager.findCarByID(car1.ID()));
+        assertNotNull(manager.findCarByID(car2.ID()));
 
         manager.removeCar(car1);
 
-        assertNull(manager.findCarByID(car1.getID()));
-        assertNotNull(manager.findCarByID(car2.getID()));
+        assertNull(manager.findCarByID(car1.ID()));
+        assertNotNull(manager.findCarByID(car2.ID()));
     }
 
     @Test
@@ -138,15 +155,15 @@ public class CarManagerTest {
         }
 
         try {
-            car.setID(null);
-            manager.removeCar(car);
+            Car carWithNullID = car.withID(null);
+            manager.removeCar(carWithNullID);
             fail();
         } catch (IllegalArgumentException ex) {
         }
 
         try {
-            car.setID(1l);
-            manager.removeCar(car);
+            Car carWithNonExistentID = car.withID("non-existent-id");
+            manager.removeCar(carWithNonExistentID);
             fail();
         } catch (TransactionException ex) {
         }
@@ -159,63 +176,63 @@ public class CarManagerTest {
 
         manager.addCar(car1);
         manager.addCar(car2);
-        Long id = car1.getID();
+        String id = car1.ID();
 
         car1 = manager.findCarByID(id);
-        car1.setColor("White");
+        car1 = car1.withColor("White");
         manager.updateCarInfo(car1);
-        assertEquals("White", car1.getColor());
-        assertEquals("0B6 6835", car1.getLicensePlate());
-        assertEquals("Škoda", car1.getModel());
-        assertEquals(Double.valueOf(200.0), Double.valueOf(car1.getRentalPayment()));
-        assertTrue(car1.getAvailable());
+        assertEquals("White", car1.color());
+        assertEquals("0B6 6835", car1.licensePlate());
+        assertEquals("Škoda", car1.model());
+        assertEquals(Double.valueOf(200.0), Double.valueOf(car1.rentalPayment()));
+        assertTrue(car1.available());
 
         car1 = manager.findCarByID(id);
-        car1.setLicensePlate("8B5 0983");
+        car1 = car1.withLicensePlate("8B5 0983");
         manager.updateCarInfo(car1);
-        assertEquals("White", car1.getColor());
-        assertEquals("8B5 0983", car1.getLicensePlate());
-        assertEquals("Škoda", car1.getModel());
-        assertEquals(Double.valueOf(200.0), Double.valueOf(car1.getRentalPayment()));
-        assertTrue(car1.getAvailable());
+        assertEquals("White", car1.color());
+        assertEquals("8B5 0983", car1.licensePlate());
+        assertEquals("Škoda", car1.model());
+        assertEquals(Double.valueOf(200.0), Double.valueOf(car1.rentalPayment()));
+        assertTrue(car1.available());
 
         car1 = manager.findCarByID(id);
-        car1.setModel("Volkswagen");
+        car1 = car1.withModel("Volkswagen");
         manager.updateCarInfo(car1);
-        assertEquals("White", car1.getColor());
-        assertEquals("8B5 0983", car1.getLicensePlate());
-        assertEquals("Volkswagen", car1.getModel());
-        assertEquals(Double.valueOf(200.0), Double.valueOf(car1.getRentalPayment()));
-        assertTrue(car1.getAvailable());
+        assertEquals("White", car1.color());
+        assertEquals("8B5 0983", car1.licensePlate());
+        assertEquals("Volkswagen", car1.model());
+        assertEquals(Double.valueOf(200.0), Double.valueOf(car1.rentalPayment()));
+        assertTrue(car1.available());
 
         car1 = manager.findCarByID(id);
-        car1.setRentalPayment(300.0);
+        car1 = car1.withRentalPayment(300.0);
         manager.updateCarInfo(car1);
-        assertEquals("White", car1.getColor());
-        assertEquals("8B5 0983", car1.getLicensePlate());
-        assertEquals("Volkswagen", car1.getModel());
-        assertEquals(Double.valueOf(300.0), Double.valueOf(car1.getRentalPayment()));
-        assertTrue(car1.getAvailable());
+        assertEquals("White", car1.color());
+        assertEquals("8B5 0983", car1.licensePlate());
+        assertEquals("Volkswagen", car1.model());
+        assertEquals(Double.valueOf(300.0), Double.valueOf(car1.rentalPayment()));
+        assertTrue(car1.available());
 
         car1 = manager.findCarByID(id);
-        car1.setRentalPayment(0.0);
+        car1 = car1.withRentalPayment(0.0);
         manager.updateCarInfo(car1);
-        assertEquals("White", car1.getColor());
-        assertEquals("8B5 0983", car1.getLicensePlate());
-        assertEquals("Volkswagen", car1.getModel());
-        assertEquals(Double.valueOf(0.0), Double.valueOf(car1.getRentalPayment()));
-        assertTrue(car1.getAvailable());
+        assertEquals("White", car1.color());
+        assertEquals("8B5 0983", car1.licensePlate());
+        assertEquals("Volkswagen", car1.model());
+        assertEquals(Double.valueOf(0.0), Double.valueOf(car1.rentalPayment()));
+        assertTrue(car1.available());
 
         car1 = manager.findCarByID(id);
-        car1.setStatus(false);
+        car1 = car1.withStatus(false);
         manager.updateCarInfo(car1);
-        assertEquals("White", car1.getColor());
-        assertEquals("8B5 0983", car1.getLicensePlate());
-        assertEquals("Volkswagen", car1.getModel());
-        assertEquals(Double.valueOf(0.0), Double.valueOf(car1.getRentalPayment()));
-        assertFalse(car1.getAvailable());
+        assertEquals("White", car1.color());
+        assertEquals("8B5 0983", car1.licensePlate());
+        assertEquals("Volkswagen", car1.model());
+        assertEquals(Double.valueOf(0.0), Double.valueOf(car1.rentalPayment()));
+        assertFalse(car1.available());
 
-        assertCarDeepEquals(car2, manager.findCarByID(car2.getID()));
+        assertCarDeepEquals(car2, manager.findCarByID(car2.ID()));
     }
 
     @Test
@@ -223,7 +240,7 @@ public class CarManagerTest {
         Car car = newCar("Black", "0B6 6835", "Škoda", 200.0);
 
         manager.addCar(car);
-        Long id = car.getID();
+        String id = car.ID();
 
         try {
             manager.updateCarInfo(null);
@@ -233,7 +250,7 @@ public class CarManagerTest {
 
         try {
             car = manager.findCarByID(id);
-            car.setID(null);
+            car = car.withID(null);
             manager.updateCarInfo(car);
             fail();
         } catch (IllegalArgumentException ex) {
@@ -241,7 +258,7 @@ public class CarManagerTest {
 
         try {
             car = manager.findCarByID(id);
-            car.setID(id - 1);
+            car = car.withID("different-id");
             manager.updateCarInfo(car);
             fail();
         } catch (TransactionException ex) {
@@ -249,7 +266,7 @@ public class CarManagerTest {
 
         try {
             car = manager.findCarByID(id);
-            car.setColor(null);
+            car = car.withColor(null);
             manager.updateCarInfo(car);
             fail();
         } catch (IllegalArgumentException ex) {
@@ -257,7 +274,7 @@ public class CarManagerTest {
 
         try {
             car = manager.findCarByID(id);
-            car.setLicensePlate(null);
+            car = car.withLicensePlate(null);
             manager.updateCarInfo(car);
             fail();
         } catch (IllegalArgumentException ex) {
@@ -265,7 +282,7 @@ public class CarManagerTest {
 
         try {
             car = manager.findCarByID(id);
-            car.setModel(null);
+            car = car.withModel(null);
             manager.updateCarInfo(car);
             fail();
         } catch (IllegalArgumentException ex) {
@@ -273,7 +290,7 @@ public class CarManagerTest {
 
         try {
             car = manager.findCarByID(id);
-            car.setRentalPayment(-1.0);
+            car = car.withRentalPayment(-1.0);
             manager.updateCarInfo(car);
             fail();
         } catch (IllegalArgumentException ex) {
@@ -311,7 +328,7 @@ public class CarManagerTest {
 
         assertCarDeepEquals(expected, actual);
 
-        car1.setStatus(false);
+        car1 = car1.withStatus(false);
         manager.updateCarInfo(car1);
 
         expected = Arrays.asList(car2);
@@ -319,30 +336,23 @@ public class CarManagerTest {
 
         assertCarDeepEquals(expected, actual);
 
-        car2.setStatus(false);
+        car2 = car2.withStatus(false);
         manager.updateCarInfo(car2);
 
         assertTrue(manager.getAvailableCars().isEmpty());
     }
 
     public static Car newCar(String colour, String licensePlate, String model, double payment) {
-        Car car = new Car();
-        car.setColor(colour);
-        car.setLicensePlate(licensePlate);
-        car.setModel(model);
-        car.setRentalPayment(payment);
-        car.setStatus(true);
-
-        return car;
+        return Car.create(model, colour, true, payment, licensePlate);
     }
 
     public static void assertCarDeepEquals(Car expected, Car actual) {
-        assertEquals(expected.getID(), actual.getID());
-        assertEquals(expected.getColor(), actual.getColor());
-        assertEquals(expected.getLicensePlate(), actual.getLicensePlate());
-        assertEquals(expected.getModel(), actual.getModel());
-        assertEquals(expected.getRentalPayment(), actual.getRentalPayment());
-        assertEquals(expected.getAvailable(), actual.getAvailable());
+        assertEquals(expected.ID(), actual.ID());
+        assertEquals(expected.color(), actual.color());
+        assertEquals(expected.licensePlate(), actual.licensePlate());
+        assertEquals(expected.model(), actual.model());
+        assertEquals(expected.rentalPayment(), actual.rentalPayment());
+        assertEquals(expected.available(), actual.available());
     }
 
     public static void assertCarDeepEquals(List<Car> expected, List<Car> actual) {
@@ -356,17 +366,11 @@ public class CarManagerTest {
             assertCarDeepEquals(expectedSortedList.get(i), actualSortedList.get(i));
         }
     }
-    private static Comparator<Car> carByIDComparator = new Comparator<Car>() {
 
+    private static Comparator<Car> carByIDComparator = new Comparator<Car>() {
         @Override
         public int compare(Car car1, Car car2) {
-            return Long.valueOf(car1.getID()).compareTo(Long.valueOf(car2.getID()));
+            return car1.ID().compareTo(car2.ID());
         }
     };
-
-    private static DataSource prepareDataSource() throws SQLException {
-        BasicDataSource ds = new BasicDataSource();
-        ds.setUrl("jdbc:derby:memory:CarRentalDB;create=true");
-        return ds;
-    }
 }

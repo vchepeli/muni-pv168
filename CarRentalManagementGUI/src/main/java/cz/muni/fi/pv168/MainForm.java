@@ -856,30 +856,19 @@ public class MainForm {
     }
 
     private DataSource prepareDataSource() {
-        ResourceBundle databaseProperties = ResourceBundle.getBundle("cz.muni.fi.pv168.database");
-
-        String driver = databaseProperties.getString("jdbc.drivers");
-        String url = databaseProperties.getString("jdbc.url");
-        String username = databaseProperties.getString("jdbc.username");
-        String password = databaseProperties.getString("jdbc.password");
-
-        BasicDataSource ds = new BasicDataSource();
-        ds.setDriverClassName(driver);
-        ds.setUrl(url);
-        ds.setUsername(username);
-        ds.setPassword(password);
-
         try {
-            DBUtils.tryCreateTables(ds);
-        } catch (SQLException ex) {
+            // Initialize Hibernate and create tables via managers
+            carManager.tryCreateTables();
+            customerManager.tryCreateTables();
+            rentManager.tryCreateTables();
+            // Return a non-null value to indicate successful initialization
+            // (Actual DataSource configuration is no longer used, Hibernate handles database connection)
+            BasicDataSource dummyDs = new BasicDataSource();
+            return dummyDs;
+        } catch (Exception ex) {
             showAlert(localization.getString("error"), localization.getString("db_connection_failure"));
+            return null;
         }
-
-        carManager.setDataSource(ds);
-        customerManager.setDataSource(ds);
-        rentManager.setDataSource(ds);
-
-        return ds;
     }
 
     private boolean discardChanges() {
