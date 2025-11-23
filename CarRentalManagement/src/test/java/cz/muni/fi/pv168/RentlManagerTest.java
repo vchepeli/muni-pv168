@@ -95,6 +95,10 @@ public class RentlManagerTest {
         assertTrue(car2.available());
         assertTrue(car3.available());
 
+        // Activate customer before renting
+        customer1 = customer1.withActive(true);
+        customerManager.updateCustomerInfo(customer1);
+
         manager.rentCarToCustomer(car1, customer1, Date.valueOf("2012-03-21"), Date.valueOf("2012-03-31"));
 
         assertEquals(customer1, manager.findCustomerWithCar(car1));
@@ -119,6 +123,12 @@ public class RentlManagerTest {
         assertFalse(customer1.active());
         assertFalse(customer2.active());
         assertFalse(customer3.active());
+
+        // Activate customers before renting
+        customer1 = customer1.withActive(true);
+        customer2 = customer2.withActive(true);
+        customerManager.updateCustomerInfo(customer1);
+        customerManager.updateCustomerInfo(customer2);
 
         manager.rentCarToCustomer(car2, customer1, Date.valueOf("2012-03-21"), Date.valueOf("2012-03-31"));
         manager.rentCarToCustomer(car3, customer1, Date.valueOf("2012-03-25"), Date.valueOf("2012-04-02"));
@@ -149,6 +159,12 @@ public class RentlManagerTest {
         assertTrue(car1.available());
         assertTrue(car2.available());
         assertTrue(car3.available());
+
+        // Activate customers before renting
+        customer1 = customer1.withActive(true);
+        customer2 = customer2.withActive(true);
+        customerManager.updateCustomerInfo(customer1);
+        customerManager.updateCustomerInfo(customer2);
 
         manager.rentCarToCustomer(car1, customer1, Date.valueOf("2012-03-21"), Date.valueOf("2012-03-31"));
         manager.rentCarToCustomer(car3, customer2, Date.valueOf("2012-03-15"), Date.valueOf("2012-03-27"));
@@ -231,6 +247,12 @@ public class RentlManagerTest {
         assertTrue(car1.available());
         assertTrue(car2.available());
         assertTrue(car3.available());
+
+        // Activate customers before renting
+        customer1 = customer1.withActive(true);
+        customer2 = customer2.withActive(true);
+        customerManager.updateCustomerInfo(customer1);
+        customerManager.updateCustomerInfo(customer2);
 
         manager.rentCarToCustomer(car1, customer1, Date.valueOf("2012-03-21"), Date.valueOf("2012-03-31"));
         manager.rentCarToCustomer(car2, customer1, Date.valueOf("2012-03-25"), Date.valueOf("2012-04-02"));

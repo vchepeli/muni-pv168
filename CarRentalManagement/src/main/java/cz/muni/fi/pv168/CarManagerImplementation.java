@@ -123,6 +123,10 @@ public class CarManagerImplementation implements CarManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
+            Car existingCar = session.get(Car.class, car.ID());
+            if (existingCar == null) {
+                throw new TransactionException("Car with ID " + car.ID() + " does not exist in DB");
+            }
             session.merge(car);
             transaction.commit();
             logger.log(Level.INFO, ("Car ID " + car.ID() + " updated"));
