@@ -95,7 +95,7 @@ public class NewCustomerForm {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
                 try {
-                    Customer customer = new Customer(null, firstNameField.getText(), surnameField.getText(),
+                    Customer customer = Customer.create(firstNameField.getText(), surnameField.getText(),
                             addressField.getText(), phoneField.getText(), licenseField.getText(), false);
                     return customer;
                 } catch (Exception e) {

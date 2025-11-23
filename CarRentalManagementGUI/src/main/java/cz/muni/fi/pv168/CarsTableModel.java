@@ -124,7 +124,7 @@ public class CarsTableModel extends AbstractTableModel {
         if (rowIndex > cars.size()) {
             throw new IllegalArgumentException("Row Index Out of Bounds");
         }
-        Car car = ((rowIndex == cars.size()) ? new Car() : cars.get(rowIndex));
+        Car car = ((rowIndex == cars.size()) ? Car.create("", "", true, 0.0, "") : cars.get(rowIndex));
         switch (columnIndex) {
             case 0:
                 return car.ID();
@@ -151,7 +151,7 @@ public class CarsTableModel extends AbstractTableModel {
         }
         else if (rowIndex == cars.size())
         {
-            car = new Car(null, null, null, null, null, null);
+            car = Car.create("", "", true, 0.0, "");
             add(car);
         }
         else

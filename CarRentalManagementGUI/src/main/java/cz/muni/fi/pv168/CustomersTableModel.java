@@ -125,7 +125,7 @@ public class CustomersTableModel extends AbstractTableModel {
         if (rowIndex > customers.size()) {
             throw new IllegalArgumentException("Row Index Out Of Bounds.");
         }
-        Customer customer = ((rowIndex == customers.size()) ? new Customer() : customers.get(rowIndex));
+        Customer customer = ((rowIndex == customers.size()) ? Customer.create("", "", "", "", "", false) : customers.get(rowIndex));
         switch (columnIndex) {
             case 0:
                 return customer.ID();
@@ -154,7 +154,7 @@ public class CustomersTableModel extends AbstractTableModel {
         }
         else if (rowIndex == customers.size())
         {
-            customer = new Customer(null, null, null, null, null, null, false);
+            customer = Customer.create("", "", "", "", "", false);
             add(customer);
         }
         else

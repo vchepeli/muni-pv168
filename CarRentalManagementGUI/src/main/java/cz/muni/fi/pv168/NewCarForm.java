@@ -95,7 +95,7 @@ public class NewCarForm {
                             localization.getString("price") + " " + localization.getString("must_be_number"));
                         return null;
                     }
-                    Car car = new Car(null, modelField.getText(), colorField.getText(), true, rentalPayment, licensePlateField.getText());
+                    Car car = Car.create(modelField.getText(), colorField.getText(), true, rentalPayment, licensePlateField.getText());
                     return car;
                 } catch (Exception e) {
                     showError(localization.getString("error"), e.getMessage());
