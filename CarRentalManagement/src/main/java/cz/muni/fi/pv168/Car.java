@@ -27,7 +27,8 @@ public record Car(
     String licensePlate
 ) {
     @Instantiator
-    public Car {}
+    public Car(String ID, String model, String color, Boolean available, Double rentalPayment, String licensePlate) {}
+
     /**
      * Factory method for creating new Car instances with auto-generated UUID.
      * Use this when creating cars to be saved to the database.

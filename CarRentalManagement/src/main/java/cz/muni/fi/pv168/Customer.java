@@ -30,7 +30,7 @@ public record Customer(
     Boolean active
 ) {
     @Instantiator
-    public Customer {}
+    public Customer(String ID, String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {}
 
     /**
      * Factory method for creating new Customer instances with auto-generated UUID.

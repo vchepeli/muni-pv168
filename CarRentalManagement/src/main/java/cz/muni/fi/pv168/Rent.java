@@ -25,7 +25,7 @@ public record Rent(
     String customerID
 ) {
     @Instantiator
-    public Rent {}
+    public Rent(String ID, Date rentDate, Date dueDate, String carID, String customerID) {}
 
     /**
      * Factory method for creating new Rent instances with auto-generated UUID.
