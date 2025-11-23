@@ -1,7 +1,6 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -27,18 +26,9 @@ public record Car(
     String licensePlate
 ) {
     /**
-     * Instantiator for Hibernate to construct Car records from database rows.
-     * This method receives all fields from the database at once, avoiding
-     * the need for Hibernate to modify final record fields after instantiation.
-     */
-    @Instantiator("instantiate")
-    public static Car instantiate(String id, String model, String color, Boolean available, Double rentalPayment, String licensePlate) {
-        return new Car(id, model, color, available, rentalPayment, licensePlate);
-    }
-
-    /**
      * Factory method for creating new Car instances with auto-generated UUID.
      * Use this when creating cars to be saved to the database.
+     * The record's canonical constructor is used by Hibernate for loading from DB.
      */
     public static Car create(String model, String color, Boolean available, Double rentalPayment, String licensePlate) {
         return new Car(UUID.randomUUID().toString(), model, color, available, rentalPayment, licensePlate);

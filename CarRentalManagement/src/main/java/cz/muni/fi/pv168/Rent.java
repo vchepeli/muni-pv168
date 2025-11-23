@@ -2,7 +2,6 @@ package cz.muni.fi.pv168;
 
 import java.sql.Date;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -25,18 +24,9 @@ public record Rent(
     String customerID
 ) {
     /**
-     * Instantiator for Hibernate to construct Rent records from database rows.
-     * This method receives all fields from the database at once, avoiding
-     * the need for Hibernate to modify final record fields after instantiation.
-     */
-    @Instantiator("instantiate")
-    public static Rent instantiate(String id, Date rentDate, Date dueDate, String carID, String customerID) {
-        return new Rent(id, rentDate, dueDate, carID, customerID);
-    }
-
-    /**
      * Factory method for creating new Rent instances with auto-generated UUID.
      * Use this when creating rents to be saved to the database.
+     * The record's canonical constructor is used by Hibernate for loading from DB.
      */
     public static Rent create(Date rentDate, Date dueDate, String carID, String customerID) {
         return new Rent(UUID.randomUUID().toString(), rentDate, dueDate, carID, customerID);

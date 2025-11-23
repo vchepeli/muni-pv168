@@ -1,7 +1,6 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -30,18 +29,9 @@ public record Customer(
     Boolean active
 ) {
     /**
-     * Instantiator for Hibernate to construct Customer records from database rows.
-     * This method receives all fields from the database at once, avoiding
-     * the need for Hibernate to modify final record fields after instantiation.
-     */
-    @Instantiator("instantiate")
-    public static Customer instantiate(String id, String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {
-        return new Customer(id, firstName, lastName, address, phoneNumber, driversLicense, active);
-    }
-
-    /**
      * Factory method for creating new Customer instances with auto-generated UUID.
      * Use this when creating customers to be saved to the database.
+     * The record's canonical constructor is used by Hibernate for loading from DB.
      */
     public static Customer create(String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {
         return new Customer(UUID.randomUUID().toString(), firstName, lastName, address, phoneNumber, driversLicense, active);
