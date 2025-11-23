@@ -19,10 +19,10 @@ public class RentManagerImplementation implements RentManager {
         if (null == car) {
             throw new IllegalArgumentException("Can't find Car with NULL pointer");
         }
-        if (null == car.getID()) {
+        if (null == car.ID()) {
             throw new IllegalArgumentException("Can't find Car with NULL ID");
         }
-        if (car.getAvailable()) {
+        if (car.available()) {
             throw new IllegalArgumentException("Car is NOT RENTED");
         }
 
@@ -30,7 +30,7 @@ public class RentManagerImplementation implements RentManager {
         try {
             Query<Rent> query = session.createQuery(
                     "FROM Rent WHERE carID = :carId", Rent.class);
-            query.setParameter("carId", car.getID());
+            query.setParameter("carId", car.ID());
             List<Rent> rents = query.list();
             if (rents.isEmpty()) {
                 return null;
@@ -38,7 +38,7 @@ public class RentManagerImplementation implements RentManager {
             if (rents.size() > 1) {
                 throw new IllegalArgumentException("Multiple Customers with same Car");
             }
-            return customerManager.findCustomerByID(rents.get(0).getCustomerID());
+            return customerManager.findCustomerByID(rents.get(0).customerID());
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Error when getting customer from DB", ex);
             throw new TransactionException("Error when getting customer from DB", ex);
@@ -52,10 +52,10 @@ public class RentManagerImplementation implements RentManager {
         if (null == car) {
             throw new IllegalArgumentException("Can't find Car with NULL pointer");
         }
-        if (null == car.getID()) {
+        if (null == car.ID()) {
             throw new IllegalArgumentException("Can't find Car with NULL ID");
         }
-        if (car.getAvailable()) {
+        if (car.available()) {
             throw new IllegalArgumentException("Car is NOT RENTED");
         }
 
@@ -63,7 +63,7 @@ public class RentManagerImplementation implements RentManager {
         try {
             Query<Rent> query = session.createQuery(
                     "FROM Rent WHERE carID = :carId", Rent.class);
-            query.setParameter("carId", car.getID());
+            query.setParameter("carId", car.ID());
             List<Rent> rents = query.list();
             if (rents.isEmpty()) {
                 return null;
@@ -99,10 +99,10 @@ public class RentManagerImplementation implements RentManager {
         if (null == customer) {
             throw new IllegalArgumentException("CUSTOMER POINTS TO NULL");
         }
-        if (null == customer.getID()) {
+        if (null == customer.ID()) {
             throw new IllegalArgumentException("CUSTOMER ID IN NULL");
         }
-        if (!customer.getActive()) {
+        if (!customer.active()) {
             throw new IllegalArgumentException("CUSTOMER IS NOT ACTIVE");
         }
 
@@ -110,11 +110,11 @@ public class RentManagerImplementation implements RentManager {
         try {
             Query<Rent> query = session.createQuery(
                     "FROM Rent WHERE customerID = :customerId", Rent.class);
-            query.setParameter("customerId", customer.getID());
+            query.setParameter("customerId", customer.ID());
             List<Rent> rents = query.list();
             List<Car> customerCars = new java.util.ArrayList<>();
             for (Rent rent : rents) {
-                Car car = carManager.findCarByID(rent.getCarID());
+                Car car = carManager.findCarByID(rent.carID());
                 if (car != null) {
                     customerCars.add(car);
                 }
@@ -133,13 +133,13 @@ public class RentManagerImplementation implements RentManager {
         if ((null == car) || (null == customer)) {
             throw new IllegalArgumentException("Can't insert null entry to DB");
         }
-        if (null == car.getID()) {
+        if (null == car.ID()) {
             throw new IllegalArgumentException("Car ID is NULL");
         }
-        if (null == customer.getID()) {
+        if (null == customer.ID()) {
             throw new IllegalArgumentException("Customer ID is NULL");
         }
-        if (!car.getAvailable()) {
+        if (!car.available()) {
             throw new IllegalArgumentException("Car is already rented");
         }
 
@@ -147,7 +147,7 @@ public class RentManagerImplementation implements RentManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            Rent rent = new Rent(null, rentDate, dueDate, car.getID(), customer.getID());
+            Rent rent = new Rent(null, rentDate, dueDate, car.ID(), customer.ID());
             session.persist(rent);
             transaction.commit();
             logger.log(Level.INFO, ("New Rent ID " + rent.ID() + " added"));
@@ -170,10 +170,10 @@ public class RentManagerImplementation implements RentManager {
         if ((null == car) || (null == customer)) {
             throw new IllegalArgumentException("Can't use NULL entry");
         }
-        if ((null == car.getID()) || (null == customer.getID())) {
+        if ((null == car.ID()) || (null == customer.ID())) {
             throw new IllegalArgumentException("Customer or Car ID is NULL not exist in DB");
         }
-        if (!customer.getActive()) {
+        if (!customer.active()) {
             throw new IllegalArgumentException("Customer is not active");
         }
 
@@ -183,8 +183,8 @@ public class RentManagerImplementation implements RentManager {
             transaction = session.beginTransaction();
             Query<Rent> query = session.createQuery(
                     "FROM Rent WHERE customerID = :customerId AND carID = :carId", Rent.class);
-            query.setParameter("customerId", customer.getID());
-            query.setParameter("carId", car.getID());
+            query.setParameter("customerId", customer.ID());
+            query.setParameter("carId", car.ID());
             List<Rent> rents = query.list();
             if (rents.isEmpty()) {
                 throw new TransactionException("Rent not found");

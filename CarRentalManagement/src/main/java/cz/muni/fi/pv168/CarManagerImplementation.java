@@ -25,11 +25,11 @@ public class CarManagerImplementation implements CarManager {
         if (null == car) {
             throw new IllegalArgumentException("Can not INSERT NULL ENTRY to CARS");
         }
-        if (null != car.getID()) {
+        if (null != car.ID()) {
             throw new IllegalArgumentException("Car ID was SET BEFORE");
         }
-        if ((null == car.getColor()) || (null == car.getLicensePlate()) || (null == car.getModel())
-                || (null == car.getRentalPayment()) || (car.getRentalPayment() < 0)) {
+        if ((null == car.color()) || (null == car.licensePlate()) || (null == car.model())
+                || (null == car.rentalPayment()) || (car.rentalPayment() < 0)) {
             throw new IllegalArgumentException("Car with WRONG PARAMETERS");
         }
 
@@ -39,7 +39,7 @@ public class CarManagerImplementation implements CarManager {
             transaction = session.beginTransaction();
             session.persist(car);
             transaction.commit();
-            logger.log(Level.INFO, ("New Car ID " + car.getID() + " added"));
+            logger.log(Level.INFO, ("New Car ID " + car.ID() + " added"));
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -57,10 +57,10 @@ public class CarManagerImplementation implements CarManager {
         if (null == car) {
             throw new IllegalArgumentException("Can't DELETE NULL ENTRY from CarDB");
         }
-        if (null == car.getID()) {
+        if (null == car.ID()) {
             throw new IllegalArgumentException("Can't DELETE Car with NO ID");
         }
-        if (!car.getAvailable()) {
+        if (!car.available()) {
             throw new IllegalArgumentException("Can't DELETE rented Car");
         }
 
@@ -68,13 +68,13 @@ public class CarManagerImplementation implements CarManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            Car managedCar = session.get(Car.class, car.getID());
+            Car managedCar = session.get(Car.class, car.ID());
             if (managedCar == null) {
                 throw new TransactionException("Given Car does not exist in DB" + car);
             }
             session.remove(managedCar);
             transaction.commit();
-            logger.log(Level.INFO, ("Car ID " + car.getID() + " removed"));
+            logger.log(Level.INFO, ("Car ID " + car.ID() + " removed"));
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -111,11 +111,11 @@ public class CarManagerImplementation implements CarManager {
         if (null == car) {
             throw new IllegalArgumentException("Can't INSERT NULL ENTRY to CarDB");
         }
-        if (null == car.getID()) {
+        if (null == car.ID()) {
             throw new IllegalArgumentException("Can't UPDATE Car with NULL ID");
         }
-        if ((null == car.getColor()) || (null == car.getLicensePlate()) || (null == car.getModel())
-                || (null == car.getRentalPayment()) || (car.getRentalPayment() < 0) || (null == car.getAvailable())) {
+        if ((null == car.color()) || (null == car.licensePlate()) || (null == car.model())
+                || (null == car.rentalPayment()) || (car.rentalPayment() < 0) || (null == car.available())) {
             throw new IllegalArgumentException("Car with WRONG PARAMETRS");
         }
 
@@ -125,13 +125,13 @@ public class CarManagerImplementation implements CarManager {
             transaction = session.beginTransaction();
             session.merge(car);
             transaction.commit();
-            logger.log(Level.INFO, ("Car ID " + car.getID() + " updated"));
+            logger.log(Level.INFO, ("Car ID " + car.ID() + " updated"));
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            logger.log(Level.SEVERE, "Error UPDATE Car from DB with ID " + car.getID(), ex);
-            throw new TransactionException("Error UPDATE Car from DB with ID " + car.getID(), ex);
+            logger.log(Level.SEVERE, "Error UPDATE Car from DB with ID " + car.ID(), ex);
+            throw new TransactionException("Error UPDATE Car from DB with ID " + car.ID(), ex);
         } finally {
             session.close();
         }

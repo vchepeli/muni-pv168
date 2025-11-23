@@ -24,11 +24,11 @@ public class CustomerManagerImplementation implements CustomerManager {
         if (null == customer) {
             throw new IllegalArgumentException("Can't INSERT NULL entry");
         }
-        if (null != customer.getID()) {
+        if (null != customer.ID()) {
             throw new IllegalArgumentException("Customer ID was SET BEFORE");
         }
-        if (null == customer.getFirstName() || null == customer.getLastName() || null == customer.getAddress() || null == customer.getPhoneNumber()
-                || null == customer.getDriversLicense()) {
+        if (null == customer.firstName() || null == customer.lastName() || null == customer.address() || null == customer.phoneNumber()
+                || null == customer.driversLicense()) {
             throw new IllegalArgumentException("Customer with WRONG PARAMETERS");
         }
 
@@ -38,7 +38,7 @@ public class CustomerManagerImplementation implements CustomerManager {
             transaction = session.beginTransaction();
             session.persist(customer);
             transaction.commit();
-            logger.log(Level.INFO, ("New Customer ID " + customer.getID() + " added"));
+            logger.log(Level.INFO, ("New Customer ID " + customer.ID() + " added"));
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -55,10 +55,10 @@ public class CustomerManagerImplementation implements CustomerManager {
         if (null == customer) {
             throw new IllegalArgumentException("Can not DELETE NULL ENTRY from Customers");
         }
-        if (null == customer.getID()) {
+        if (null == customer.ID()) {
             throw new IllegalArgumentException("Can't DELETE Customer with NULL ID");
         }
-        if (customer.getActive()) {
+        if (customer.active()) {
             throw new IllegalArgumentException("Can't DELETE active Customer");
         }
 
@@ -66,13 +66,13 @@ public class CustomerManagerImplementation implements CustomerManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            Customer managedCustomer = session.get(Customer.class, customer.getID());
+            Customer managedCustomer = session.get(Customer.class, customer.ID());
             if (managedCustomer == null) {
                 throw new IllegalArgumentException("Can't locate Customer in DB");
             }
             session.remove(managedCustomer);
             transaction.commit();
-            logger.log(Level.INFO, ("Customer ID " + customer.getID() + " removed"));
+            logger.log(Level.INFO, ("Customer ID " + customer.ID() + " removed"));
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -121,11 +121,11 @@ public class CustomerManagerImplementation implements CustomerManager {
         if (null == customer) {
             throw new IllegalArgumentException("Can't UPDATE NULL ENTRY to CustomersDB");
         }
-        if (null == customer.getID()) {
+        if (null == customer.ID()) {
             throw new IllegalArgumentException("Can't UPDATE Customer with WRONG ID");
         }
-        if ((null == customer.getFirstName()) || (null == customer.getLastName()) || (null == customer.getAddress())
-                || (null == customer.getPhoneNumber()) || (null == customer.getDriversLicense())) {
+        if ((null == customer.firstName()) || (null == customer.lastName()) || (null == customer.address())
+                || (null == customer.phoneNumber()) || (null == customer.driversLicense())) {
             throw new IllegalArgumentException("Customer with WRONG PARAMETRS");
         }
 
@@ -135,7 +135,7 @@ public class CustomerManagerImplementation implements CustomerManager {
             transaction = session.beginTransaction();
             session.merge(customer);
             transaction.commit();
-            logger.log(Level.INFO, ("Customer ID " + customer.getID() + " updated"));
+            logger.log(Level.INFO, ("Customer ID " + customer.ID() + " updated"));
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
