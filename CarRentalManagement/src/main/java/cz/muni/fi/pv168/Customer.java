@@ -34,7 +34,7 @@ public record Customer(
      * This method receives all fields from the database at once, avoiding
      * the need for Hibernate to modify final record fields after instantiation.
      */
-    @Instantiator
+    @Instantiator("instantiate")
     public static Customer instantiate(String id, String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {
         return new Customer(id, firstName, lastName, address, phoneNumber, driversLicense, active);
     }

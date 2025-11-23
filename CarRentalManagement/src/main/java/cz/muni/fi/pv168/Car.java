@@ -31,7 +31,7 @@ public record Car(
      * This method receives all fields from the database at once, avoiding
      * the need for Hibernate to modify final record fields after instantiation.
      */
-    @Instantiator
+    @Instantiator("instantiate")
     public static Car instantiate(String id, String model, String color, Boolean available, Double rentalPayment, String licensePlate) {
         return new Car(id, model, color, available, rentalPayment, licensePlate);
     }

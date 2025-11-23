@@ -29,7 +29,7 @@ public record Rent(
      * This method receives all fields from the database at once, avoiding
      * the need for Hibernate to modify final record fields after instantiation.
      */
-    @Instantiator
+    @Instantiator("instantiate")
     public static Rent instantiate(String id, Date rentDate, Date dueDate, String carID, String customerID) {
         return new Rent(id, rentDate, dueDate, carID, customerID);
     }
