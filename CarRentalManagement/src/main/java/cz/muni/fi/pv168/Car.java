@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -34,11 +35,18 @@ public record Car(
     }
 
     /**
-     * Compact constructor for record validation.
-     * Hibernate 6.x will use this for instantiation when loading from database.
+     * Canonical constructor for Hibernate instantiation.
+     * This explicit constructor tells Hibernate how to instantiate Car records
+     * when loading from the database.
      */
-    public Car {
-        // Validation logic can be added here if needed
+    @Instantiator
+    public Car(String ID, String model, String color, Boolean available, Double rentalPayment, String licensePlate) {
+        this.ID = ID;
+        this.model = model;
+        this.color = color;
+        this.available = available;
+        this.rentalPayment = rentalPayment;
+        this.licensePlate = licensePlate;
     }
 
     public Car withID(String id) {

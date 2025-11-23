@@ -2,6 +2,7 @@ package cz.muni.fi.pv168;
 
 import java.sql.Date;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -32,11 +33,17 @@ public record Rent(
     }
 
     /**
-     * Compact constructor for record validation.
-     * Hibernate 6.x will use this for instantiation when loading from database.
+     * Canonical constructor for Hibernate instantiation.
+     * This explicit constructor tells Hibernate how to instantiate Rent records
+     * when loading from the database.
      */
-    public Rent {
-        // Validation logic can be added here if needed
+    @Instantiator
+    public Rent(String ID, Date rentDate, Date dueDate, String carID, String customerID) {
+        this.ID = ID;
+        this.rentDate = rentDate;
+        this.dueDate = dueDate;
+        this.carID = carID;
+        this.customerID = customerID;
     }
 
     public Rent withID(String id) {
