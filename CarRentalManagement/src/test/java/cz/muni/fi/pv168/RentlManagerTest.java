@@ -100,6 +100,7 @@ public class RentlManagerTest {
         customerManager.updateCustomerInfo(customer1);
 
         manager.rentCarToCustomer(car1, customer1, Date.valueOf("2012-03-21"), Date.valueOf("2012-03-31"));
+        car1 = carManager.findCarByID(car1.ID());
 
         assertEquals(customer1, manager.findCustomerWithCar(car1));
         assertCustomerDeepEquals(customer1, manager.findCustomerWithCar(car1));
@@ -133,6 +134,10 @@ public class RentlManagerTest {
         manager.rentCarToCustomer(car2, customer1, Date.valueOf("2012-03-21"), Date.valueOf("2012-03-31"));
         manager.rentCarToCustomer(car3, customer1, Date.valueOf("2012-03-25"), Date.valueOf("2012-04-02"));
         manager.rentCarToCustomer(car1, customer2, Date.valueOf("2012-03-15"), Date.valueOf("2012-03-27"));
+
+        car1 = carManager.findCarByID(car1.ID());
+        car2 = carManager.findCarByID(car2.ID());
+        car3 = carManager.findCarByID(car3.ID());
 
         List<Car> carsRetnedtoCustomer1 = Arrays.asList(car2, car3);
         List<Car> carsRetnedtoCustomer2 = Arrays.asList(car1);
@@ -168,6 +173,9 @@ public class RentlManagerTest {
 
         manager.rentCarToCustomer(car1, customer1, Date.valueOf("2012-03-21"), Date.valueOf("2012-03-31"));
         manager.rentCarToCustomer(car3, customer2, Date.valueOf("2012-03-15"), Date.valueOf("2012-03-27"));
+
+        car1 = carManager.findCarByID(car1.ID());
+        car3 = carManager.findCarByID(car3.ID());
 
         List<Car> carsRetnedtoCustomer1 = Arrays.asList(car1);
         List<Car> carsRetnedtoCustomer2 = Arrays.asList(car3);
@@ -230,6 +238,11 @@ public class RentlManagerTest {
         } catch (TransactionException e) {
         }
 
+        // Refresh cars from database for final checks
+        car1 = carManager.findCarByID(car1.ID());
+        car2 = carManager.findCarByID(car2.ID());
+        car3 = carManager.findCarByID(car3.ID());
+
         // Check that previous tests didn't affect data in database
         assertCarDeepEquals(carsRetnedtoCustomer1, manager.getAllCustomerCars(customer1));
         assertCarDeepEquals(carsRetnedtoCustomer2, manager.getAllCustomerCars(customer2));
@@ -258,6 +271,10 @@ public class RentlManagerTest {
         manager.rentCarToCustomer(car2, customer1, Date.valueOf("2012-03-25"), Date.valueOf("2012-04-02"));
         manager.rentCarToCustomer(car3, customer2, Date.valueOf("2012-03-15"), Date.valueOf("2012-03-27"));
 
+        car1 = carManager.findCarByID(car1.ID());
+        car2 = carManager.findCarByID(car2.ID());
+        car3 = carManager.findCarByID(car3.ID());
+
         assertEquals(customer1, manager.findCustomerWithCar(car1));
         assertCustomerDeepEquals(customer1, manager.findCustomerWithCar(car1));
         assertEquals(customer1, manager.findCustomerWithCar(car2));
@@ -266,6 +283,8 @@ public class RentlManagerTest {
         assertCustomerDeepEquals(customer2, manager.findCustomerWithCar(car3));
 
         manager.getCarFromCustomer(car3, customer2);
+
+        car3 = carManager.findCarByID(car3.ID());
 
         List<Car> carsRetnedtoCustomer1 = Arrays.asList(car1, car2);
 
