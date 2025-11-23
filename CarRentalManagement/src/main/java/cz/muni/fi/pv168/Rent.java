@@ -2,15 +2,14 @@ package cz.muni.fi.pv168;
 
 import java.sql.Date;
 import jakarta.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "rents")
 public record Rent(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rent_id_seq")
-    @SequenceGenerator(name = "rent_id_seq", sequenceName = "rent_id_sequence", allocationSize = 1)
     @Column(name = "id")
-    Long ID,
+    String ID,
 
     @Column(name = "rent_date")
     Date rentDate,
@@ -19,16 +18,16 @@ public record Rent(
     Date dueDate,
 
     @Column(name = "car")
-    Long carID,
+    String carID,
 
     @Column(name = "customer")
-    Long customerID
+    String customerID
 ) {
     public Rent() {
-        this(null, null, null, null, null);
+        this(UUID.randomUUID().toString(), null, null, null, null);
     }
 
-    public Rent withID(Long id) {
+    public Rent withID(String id) {
         return new Rent(id, rentDate, dueDate, carID, customerID);
     }
 }

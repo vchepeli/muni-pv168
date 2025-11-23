@@ -1,15 +1,14 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "customers")
 public record Customer(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_id_seq")
-    @SequenceGenerator(name = "customer_id_seq", sequenceName = "customer_id_sequence", allocationSize = 1)
     @Column(name = "id")
-    Long ID,
+    String ID,
 
     @Column(name = "first_name")
     String firstName,
@@ -30,10 +29,10 @@ public record Customer(
     Boolean active
 ) {
     public Customer() {
-        this(null, null, null, null, null, null, null);
+        this(UUID.randomUUID().toString(), null, null, null, null, null, null);
     }
 
-    public Customer withID(Long id) {
+    public Customer withID(String id) {
         return new Customer(id, firstName, lastName, address, phoneNumber, driversLicense, active);
     }
 
