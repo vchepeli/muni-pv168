@@ -955,13 +955,7 @@ public class MainForm {
             try {
                 Car updatedCar = new Car(car.ID(), modelField.getText(), colorField.getText(), car.available(), Double.parseDouble(priceField.getText()), licensePlateField.getText());
 
-                carsTableModel.carResolved(car);
-                carsTableModel.carResolved(car); // Remove from both sets first
-                if (updatedCar.ID() != null) {
-                    carsTableModel.markCarForUpdate(updatedCar);
-                }
-
-                carTable.refresh();
+                carsTableModel.updateCar(updatedCar);
             } catch (NumberFormatException ex) {
                 showAlert(localization.getString("error"), "Invalid price format. Please enter a number.");
             }
@@ -1028,12 +1022,7 @@ public class MainForm {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Customer updatedCustomer = new Customer(customer.ID(), firstNameField.getText(), lastNameField.getText(), addressField.getText(), phoneField.getText(), licenseField.getText(), customer.active());
 
-            customersTableModel.customerResolved(customer);
-            if (updatedCustomer.ID() != null) {
-                customersTableModel.markCustomerForUpdate(updatedCustomer);
-            }
-
-            customerTable.refresh();
+            customersTableModel.updateCustomer(updatedCustomer);
         }
     }
 

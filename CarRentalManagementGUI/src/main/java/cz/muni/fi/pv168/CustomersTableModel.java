@@ -225,4 +225,20 @@ public class CustomersTableModel extends AbstractTableModel {
             updatedCustomers.remove(customer);
         }
     }
+
+    public void updateCustomer(Customer updatedCustomer)
+    {
+        if (updatedCustomer != null && updatedCustomer.ID() != null) {
+            for (int i = 0; i < customers.size(); i++) {
+                Customer customer = customers.get(i);
+                if (customer.ID().equals(updatedCustomer.ID())) {
+                    customers.set(i, updatedCustomer);
+                    updatedCustomers.remove(customer);
+                    updatedCustomers.add(updatedCustomer);
+                    fireTableRowsUpdated(i, i);
+                    return;
+                }
+            }
+        }
+    }
 }

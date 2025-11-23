@@ -217,4 +217,24 @@ public class CarsTableModel extends AbstractTableModel {
             updatedCars.remove(car);
         }
     }
+
+    public void updateCar(Car updatedCar)
+    {
+        if (updatedCar != null && updatedCar.ID() != null) {
+            for (int i = 0; i < cars.size(); i++) {
+                Car car = cars.get(i);
+                if (car.ID().equals(updatedCar.ID())) {
+                    cars.set(i, updatedCar);
+                    updatedCars.remove(car);
+                    updatedCars.add(updatedCar);
+                    fireTableRowUpdated(i, i);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void fireTableRowUpdated(int row, int lastRow) {
+        fireTableRowsUpdated(row, lastRow);
+    }
 }
