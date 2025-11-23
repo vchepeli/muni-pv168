@@ -24,8 +24,8 @@ public class CustomerManagerImplementation implements CustomerManager {
         if (null == customer) {
             throw new IllegalArgumentException("Can't INSERT NULL entry");
         }
-        if (null != customer.ID()) {
-            throw new IllegalArgumentException("Customer ID was SET BEFORE");
+        if (null == customer.ID()) {
+            throw new IllegalArgumentException("Customer ID is NULL");
         }
         if (null == customer.firstName() || null == customer.lastName() || null == customer.address() || null == customer.phoneNumber()
                 || null == customer.driversLicense()) {

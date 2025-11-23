@@ -147,7 +147,7 @@ public class RentManagerImplementation implements RentManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            Rent rent = new Rent(null, rentDate, dueDate, car.ID(), customer.ID());
+            Rent rent = Rent.create(rentDate, dueDate, car.ID(), customer.ID());
             session.persist(rent);
             transaction.commit();
             logger.log(Level.INFO, ("New Rent ID " + rent.ID() + " added"));

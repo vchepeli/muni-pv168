@@ -25,8 +25,8 @@ public class CarManagerImplementation implements CarManager {
         if (null == car) {
             throw new IllegalArgumentException("Can not INSERT NULL ENTRY to CARS");
         }
-        if (null != car.ID()) {
-            throw new IllegalArgumentException("Car ID was SET BEFORE");
+        if (null == car.ID()) {
+            throw new IllegalArgumentException("Car ID is NULL");
         }
         if ((null == car.color()) || (null == car.licensePlate()) || (null == car.model())
                 || (null == car.rentalPayment()) || (car.rentalPayment() < 0)) {

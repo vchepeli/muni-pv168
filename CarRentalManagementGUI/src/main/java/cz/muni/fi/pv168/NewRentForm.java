@@ -122,7 +122,7 @@ public class NewRentForm {
                         return null;
                     }
 
-                    Rent rent = new Rent(null, rentDate, dueDate, car.ID(), customer.ID());
+                    Rent rent = Rent.create(rentDate, dueDate, car.ID(), customer.ID());
                     return rent;
                 } catch (Exception e) {
                     showError(localization.getString("error"), e.getMessage());
