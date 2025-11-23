@@ -956,6 +956,7 @@ public class MainForm {
                 Car updatedCar = new Car(car.ID(), modelField.getText(), colorField.getText(), car.available(), Double.parseDouble(priceField.getText()), licensePlateField.getText());
 
                 carsTableModel.updateCar(updatedCar);
+                carTable.refresh();
             } catch (NumberFormatException ex) {
                 showAlert(localization.getString("error"), "Invalid price format. Please enter a number.");
             }
@@ -1023,6 +1024,7 @@ public class MainForm {
             Customer updatedCustomer = new Customer(customer.ID(), firstNameField.getText(), lastNameField.getText(), addressField.getText(), phoneField.getText(), licenseField.getText(), customer.active());
 
             customersTableModel.updateCustomer(updatedCustomer);
+            customerTable.refresh();
         }
     }
 
