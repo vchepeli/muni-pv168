@@ -21,4 +21,6 @@ public interface CarManager {
     public void setDataSource(DataSource ds);
 
     public void setLogger(FileOutputStream fs);
+
+    public void tryCreateTables();
 }

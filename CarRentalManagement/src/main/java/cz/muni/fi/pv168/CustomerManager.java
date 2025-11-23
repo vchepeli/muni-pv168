@@ -17,8 +17,10 @@ public interface CustomerManager {
     public void updateCustomerInfo(Customer customer) throws IllegalArgumentException, TransactionException;
 
     public List<Customer> getActiveCustomers() throws IllegalArgumentException, TransactionException;
-    
+
     public void setDataSource(DataSource ds);
-    
+
     public void setLogger(FileOutputStream fs);
+
+    public void tryCreateTables();
 }
