@@ -29,16 +29,21 @@ public record Customer(
     @Column(name = "status")
     Boolean active
 ) {
-    @Instantiator
-    public Customer(String ID, String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {}
-
     /**
      * Factory method for creating new Customer instances with auto-generated UUID.
      * Use this when creating customers to be saved to the database.
-     * The record's canonical constructor is used by Hibernate for loading from DB.
      */
     public static Customer create(String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {
         return new Customer(UUID.randomUUID().toString(), firstName, lastName, address, phoneNumber, driversLicense, active);
+    }
+
+    /**
+     * Instantiation method for Hibernate.
+     * Used by Hibernate to instantiate Customer records during merge operations.
+     */
+    @Instantiator
+    static Customer instantiate(String ID, String firstName, String lastName, String address, String phoneNumber, String driversLicense, Boolean active) {
+        return new Customer(ID, firstName, lastName, address, phoneNumber, driversLicense, active);
     }
 
     public Customer withID(String id) {

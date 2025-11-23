@@ -24,16 +24,21 @@ public record Rent(
     @Column(name = "customer")
     String customerID
 ) {
-    @Instantiator
-    public Rent(String ID, Date rentDate, Date dueDate, String carID, String customerID) {}
-
     /**
      * Factory method for creating new Rent instances with auto-generated UUID.
      * Use this when creating rents to be saved to the database.
-     * The record's canonical constructor is used by Hibernate for loading from DB.
      */
     public static Rent create(Date rentDate, Date dueDate, String carID, String customerID) {
         return new Rent(UUID.randomUUID().toString(), rentDate, dueDate, carID, customerID);
+    }
+
+    /**
+     * Instantiation method for Hibernate.
+     * Used by Hibernate to instantiate Rent records during merge operations.
+     */
+    @Instantiator
+    static Rent instantiate(String ID, Date rentDate, Date dueDate, String carID, String customerID) {
+        return new Rent(ID, rentDate, dueDate, carID, customerID);
     }
 
     public Rent withID(String id) {
