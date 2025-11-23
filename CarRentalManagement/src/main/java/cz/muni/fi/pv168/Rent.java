@@ -2,6 +2,7 @@ package cz.muni.fi.pv168;
 
 import java.sql.Date;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
