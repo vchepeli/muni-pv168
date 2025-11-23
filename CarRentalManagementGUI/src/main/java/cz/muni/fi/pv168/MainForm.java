@@ -256,23 +256,23 @@ public class MainForm {
 
         TableColumn<Car, String> modelCol = new TableColumn<>(localization.getString("model"));
         modelCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getModel()));
+            new SimpleStringProperty(cellData.getValue().model()));
 
         TableColumn<Car, String> colorCol = new TableColumn<>(localization.getString("colour"));
         colorCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getColor()));
+            new SimpleStringProperty(cellData.getValue().color()));
 
         TableColumn<Car, String> licensePlateCol = new TableColumn<>(localization.getString("license_plate"));
         licensePlateCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getLicensePlate()));
+            new SimpleStringProperty(cellData.getValue().licensePlate()));
 
         TableColumn<Car, Double> priceCol = new TableColumn<>(localization.getString("price"));
         priceCol.setCellValueFactory(cellData ->
-            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().getRentalPayment()));
+            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().rentalPayment()));
 
         TableColumn<Car, Boolean> availableCol = new TableColumn<>(localization.getString("available"));
         availableCol.setCellValueFactory(cellData ->
-            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().getAvailable()));
+            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().available()));
 
         // Action column with Edit and Delete/Undelete buttons
         TableColumn<Car, Void> actionCol = new TableColumn<>("Actions");
@@ -342,23 +342,23 @@ public class MainForm {
 
         TableColumn<Customer, String> firstNameCol = new TableColumn<>(localization.getString("first_name"));
         firstNameCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getFirstName()));
+            new SimpleStringProperty(cellData.getValue().firstName()));
 
         TableColumn<Customer, String> lastNameCol = new TableColumn<>(localization.getString("last_name"));
         lastNameCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getLastName()));
+            new SimpleStringProperty(cellData.getValue().lastName()));
 
         TableColumn<Customer, String> addressCol = new TableColumn<>(localization.getString("address"));
         addressCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getAddress()));
+            new SimpleStringProperty(cellData.getValue().address()));
 
         TableColumn<Customer, String> phoneCol = new TableColumn<>(localization.getString("telephone"));
         phoneCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getPhoneNumber()));
+            new SimpleStringProperty(cellData.getValue().phoneNumber()));
 
         TableColumn<Customer, String> licenseCol = new TableColumn<>(localization.getString("license"));
         licenseCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getDriversLicense()));
+            new SimpleStringProperty(cellData.getValue().driversLicense()));
 
         // Action column with Edit and Delete/Undelete buttons
         TableColumn<Customer, Void> actionCol = new TableColumn<>("Actions");
@@ -428,19 +428,19 @@ public class MainForm {
 
         TableColumn<Rent, Long> carIdCol = new TableColumn<>(localization.getString("car_id"));
         carIdCol.setCellValueFactory(cellData ->
-            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().getCarID()));
+            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().carID()));
 
         TableColumn<Rent, Long> customerIdCol = new TableColumn<>(localization.getString("customer_id"));
         customerIdCol.setCellValueFactory(cellData ->
-            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().getCustomerID()));
+            javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().customerID()));
 
         TableColumn<Rent, String> rentDateCol = new TableColumn<>(localization.getString("lease_date"));
         rentDateCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getRentDate().toString()));
+            new SimpleStringProperty(cellData.getValue().rentDate().toString()));
 
         TableColumn<Rent, String> dueDateCol = new TableColumn<>(localization.getString("due_date"));
         dueDateCol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getDueDate().toString()));
+            new SimpleStringProperty(cellData.getValue().dueDate().toString()));
 
         // Action column with Edit and Delete/Undelete buttons
         TableColumn<Rent, Void> actionCol = new TableColumn<>("Actions");
@@ -979,15 +979,12 @@ public class MainForm {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                car.setModel(modelField.getText());
-                car.setColor(colorField.getText());
-                car.setLicensePlate(licensePlateField.getText());
-                car.setRentalPayment(Double.parseDouble(priceField.getText()));
+                Car updatedCar = new Car(car.ID(), modelField.getText(), colorField.getText(), car.available(), Double.parseDouble(priceField.getText()), licensePlateField.getText());
 
                 carsTableModel.carResolved(car);
                 carsTableModel.carResolved(car); // Remove from both sets first
-                if (car.ID() != null) {
-                    carsTableModel.markCarForUpdate(car);
+                if (updatedCar.ID() != null) {
+                    carsTableModel.markCarForUpdate(updatedCar);
                 }
 
                 carTable.refresh();
@@ -1056,15 +1053,11 @@ public class MainForm {
 
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            customer.setFirstName(firstNameField.getText());
-            customer.setLastName(lastNameField.getText());
-            customer.setAddress(addressField.getText());
-            customer.setPhoneNumber(phoneField.getText());
-            customer.setDriversLicense(licenseField.getText());
+            Customer updatedCustomer = new Customer(customer.ID(), firstNameField.getText(), lastNameField.getText(), addressField.getText(), phoneField.getText(), licenseField.getText(), customer.active());
 
             customersTableModel.customerResolved(customer);
-            if (customer.ID() != null) {
-                customersTableModel.markCustomerForUpdate(customer);
+            if (updatedCustomer.ID() != null) {
+                customersTableModel.markCustomerForUpdate(updatedCustomer);
             }
 
             customerTable.refresh();
