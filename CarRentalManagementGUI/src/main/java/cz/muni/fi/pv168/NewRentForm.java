@@ -18,11 +18,16 @@ public class NewRentForm {
     private RentsTableModel tableModel;
     private TableView<Rent> tableView;
     private ResourceBundle localization;
+    private CarManager carManager;
+    private CustomerManager customerManager;
 
-    public NewRentForm(RentsTableModel rtm, TableView<Rent> tv, ResourceBundle localization) {
+    public NewRentForm(RentsTableModel rtm, TableView<Rent> tv, ResourceBundle localization,
+                      CarManager carManager, CustomerManager customerManager) {
         this.tableModel = rtm;
         this.tableView = tv;
         this.localization = localization;
+        this.carManager = carManager;
+        this.customerManager = customerManager;
     }
 
     public void show() {
@@ -104,7 +109,20 @@ public class NewRentForm {
                     LocalDate dueLocalDate = localDate.plusDays(durationSpinner.getValue());
                     Date dueDate = Date.valueOf(dueLocalDate);
 
-                    Rent rent = new Rent(null, rentDate, dueDate, (long) carIdSpinner.getValue(), (long) customerIdSpinner.getValue());
+                    // Get car and customer IDs from managers
+                    String carIdStr = String.valueOf(carIdSpinner.getValue());
+                    String customerIdStr = String.valueOf(customerIdSpinner.getValue());
+
+                    // Look up actual car and customer to get their UUIDs
+                    Car car = carManager.findCarByID(carIdStr);
+                    Customer customer = customerManager.findCustomerByID(customerIdStr);
+
+                    if (car == null || customer == null) {
+                        showError(localization.getString("error"), "Invalid car or customer ID");
+                        return null;
+                    }
+
+                    Rent rent = new Rent(null, rentDate, dueDate, car.ID(), customer.ID());
                     return rent;
                 } catch (Exception e) {
                     showError(localization.getString("error"), e.getMessage());

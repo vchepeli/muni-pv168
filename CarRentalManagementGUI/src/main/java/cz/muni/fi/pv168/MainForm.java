@@ -250,7 +250,7 @@ public class MainForm {
     private TableView<Car> createCarTableView() {
         TableView<Car> table = new TableView<>();
 
-        TableColumn<Car, Long> idCol = new TableColumn<>(localization.getString("id"));
+        TableColumn<Car, String> idCol = new TableColumn<>(localization.getString("id"));
         idCol.setCellValueFactory(cellData ->
             javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().ID()));
 
@@ -336,7 +336,7 @@ public class MainForm {
     private TableView<Customer> createCustomerTableView() {
         TableView<Customer> table = new TableView<>();
 
-        TableColumn<Customer, Long> idCol = new TableColumn<>(localization.getString("id"));
+        TableColumn<Customer, String> idCol = new TableColumn<>(localization.getString("id"));
         idCol.setCellValueFactory(cellData ->
             javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().ID()));
 
@@ -422,15 +422,15 @@ public class MainForm {
     private TableView<Rent> createRentTableView() {
         TableView<Rent> table = new TableView<>();
 
-        TableColumn<Rent, Long> idCol = new TableColumn<>(localization.getString("id"));
+        TableColumn<Rent, String> idCol = new TableColumn<>(localization.getString("id"));
         idCol.setCellValueFactory(cellData ->
             javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().ID()));
 
-        TableColumn<Rent, Long> carIdCol = new TableColumn<>(localization.getString("car_id"));
+        TableColumn<Rent, String> carIdCol = new TableColumn<>(localization.getString("car_id"));
         carIdCol.setCellValueFactory(cellData ->
             javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().carID()));
 
-        TableColumn<Rent, Long> customerIdCol = new TableColumn<>(localization.getString("customer_id"));
+        TableColumn<Rent, String> customerIdCol = new TableColumn<>(localization.getString("customer_id"));
         customerIdCol.setCellValueFactory(cellData ->
             javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().customerID()));
 
@@ -756,79 +756,64 @@ public class MainForm {
     }
 
     private void openNewRentDialog() {
-        NewRentForm rentForm = new NewRentForm(rentsTableModel, rentTable, localization);
+        NewRentForm rentForm = new NewRentForm(rentsTableModel, rentTable, localization, carManager, customerManager);
         rentForm.show();
     }
 
     private void removeCar() {
         String idStr = showInputDialog("ID");
-        if (idStr == null) return;
+        if (idStr == null || idStr.trim().isEmpty()) return;
 
-        try {
-            long id = Long.parseLong(idStr);
-            Car carToRemove = null;
-            for (Car car : carsTableModel.getCars()) {
-                if (car != null && car.ID() != null && car.ID().longValue() == id) {
-                    carToRemove = car;
-                    break;
-                }
+        Car carToRemove = null;
+        for (Car car : carsTableModel.getCars()) {
+            if (car != null && car.ID() != null && car.ID().equals(idStr)) {
+                carToRemove = car;
+                break;
             }
-            if (carToRemove != null) {
-                carsTableModel.remove(carToRemove);
-                showInfo(localization.getString("info"), "Car ID " + id + " marked for removal");
-            } else {
-                showAlert(localization.getString("error"), "Car with ID " + id + " not found");
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Error", localization.getString("must_be_number"));
+        }
+        if (carToRemove != null) {
+            carsTableModel.remove(carToRemove);
+            showInfo(localization.getString("info"), "Car ID " + idStr + " marked for removal");
+        } else {
+            showAlert(localization.getString("error"), "Car with ID " + idStr + " not found");
         }
     }
 
     private void removeCustomer() {
         String idStr = showInputDialog("ID");
-        if (idStr == null) return;
+        if (idStr == null || idStr.trim().isEmpty()) return;
 
-        try {
-            long id = Long.parseLong(idStr);
-            Customer customerToRemove = null;
-            for (Customer customer : customersTableModel.getCustomers()) {
-                if (customer != null && customer.ID() != null && customer.ID().longValue() == id) {
-                    customerToRemove = customer;
-                    break;
-                }
+        Customer customerToRemove = null;
+        for (Customer customer : customersTableModel.getCustomers()) {
+            if (customer != null && customer.ID() != null && customer.ID().equals(idStr)) {
+                customerToRemove = customer;
+                break;
             }
-            if (customerToRemove != null) {
-                customersTableModel.remove(customerToRemove);
-                showInfo(localization.getString("info"), "Customer ID " + id + " marked for removal");
-            } else {
-                showAlert(localization.getString("error"), "Customer with ID " + id + " not found");
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Error", localization.getString("must_be_number"));
+        }
+        if (customerToRemove != null) {
+            customersTableModel.remove(customerToRemove);
+            showInfo(localization.getString("info"), "Customer ID " + idStr + " marked for removal");
+        } else {
+            showAlert(localization.getString("error"), "Customer with ID " + idStr + " not found");
         }
     }
 
     private void removeRent() {
         String idStr = showInputDialog("ID");
-        if (idStr == null) return;
+        if (idStr == null || idStr.trim().isEmpty()) return;
 
-        try {
-            long id = Long.parseLong(idStr);
-            Rent rentToRemove = null;
-            for (Rent rent : rentsTableModel.getRents()) {
-                if (rent != null && rent.ID() != null && rent.ID().longValue() == id) {
-                    rentToRemove = rent;
-                    break;
-                }
+        Rent rentToRemove = null;
+        for (Rent rent : rentsTableModel.getRents()) {
+            if (rent != null && rent.ID() != null && rent.ID().equals(idStr)) {
+                rentToRemove = rent;
+                break;
             }
-            if (rentToRemove != null) {
-                rentsTableModel.remove(rentToRemove);
-                showInfo(localization.getString("info"), "Rent ID " + id + " marked for removal");
-            } else {
-                showAlert(localization.getString("error"), "Rent with ID " + id + " not found");
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Error", localization.getString("must_be_number"));
+        }
+        if (rentToRemove != null) {
+            rentsTableModel.remove(rentToRemove);
+            showInfo(localization.getString("info"), "Rent ID " + idStr + " marked for removal");
+        } else {
+            showAlert(localization.getString("error"), "Rent with ID " + idStr + " not found");
         }
     }
 
