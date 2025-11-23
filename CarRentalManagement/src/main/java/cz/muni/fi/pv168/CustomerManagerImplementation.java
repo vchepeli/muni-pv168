@@ -133,15 +133,11 @@ public class CustomerManagerImplementation implements CustomerManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            Customer existingCustomer = session.get(Customer.class, customer.ID());
-            if (existingCustomer == null) {
-                throw new TransactionException("Customer with ID " + customer.ID() + " does not exist in DB");
-            }
             session.merge(customer);
             transaction.commit();
             logger.log(Level.INFO, ("Customer ID " + customer.ID() + " updated"));
         } catch (Exception ex) {
-            if (transaction != null) {
+            if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
             logger.log(Level.SEVERE, "Error when UPDATE Customer in DB", ex);

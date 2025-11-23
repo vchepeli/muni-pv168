@@ -123,15 +123,11 @@ public class CarManagerImplementation implements CarManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            Car existingCar = session.get(Car.class, car.ID());
-            if (existingCar == null) {
-                throw new TransactionException("Car with ID " + car.ID() + " does not exist in DB");
-            }
             session.merge(car);
             transaction.commit();
             logger.log(Level.INFO, ("Car ID " + car.ID() + " updated"));
         } catch (Exception ex) {
-            if (transaction != null) {
+            if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
             logger.log(Level.SEVERE, "Error UPDATE Car from DB with ID " + car.ID(), ex);
