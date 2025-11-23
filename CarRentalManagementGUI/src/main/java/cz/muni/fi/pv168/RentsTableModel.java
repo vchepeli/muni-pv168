@@ -65,7 +65,7 @@ public class RentsTableModel extends AbstractTableModel {
             case 0:
             case 1:
             case 2:
-                return Long.class;
+                return String.class;
             case 3:
             case 4:
                 return Date.class;
@@ -124,10 +124,10 @@ public class RentsTableModel extends AbstractTableModel {
         Rent updatedRent = rent;
         switch (columnIndex) {
             case 1:
-                updatedRent = new Rent(rent.ID(), rent.rentDate(), rent.dueDate(), (Long) aValue, rent.customerID());
+                updatedRent = new Rent(rent.ID(), rent.rentDate(), rent.dueDate(), (String) aValue, rent.customerID());
                 break;
             case 2:
-                updatedRent = new Rent(rent.ID(), rent.rentDate(), rent.dueDate(), rent.carID(), (Long) aValue);
+                updatedRent = new Rent(rent.ID(), rent.rentDate(), rent.dueDate(), rent.carID(), (String) aValue);
                 break;
             case 3:
                 updatedRent = new Rent(rent.ID(), (Date) aValue, rent.dueDate(), rent.carID(), rent.customerID());
@@ -150,7 +150,7 @@ public class RentsTableModel extends AbstractTableModel {
 
         @Override
         public int compare(Rent rent1, Rent rent2) {
-            return Long.valueOf(rent1.ID()).compareTo(Long.valueOf(rent2.ID()));
+            return rent1.ID().compareTo(rent2.ID());
         }
     };
     
