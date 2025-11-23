@@ -285,6 +285,7 @@ public class RentlManagerTest {
         manager.getCarFromCustomer(car3, customer2);
 
         car3 = carManager.findCarByID(car3.ID());
+        customer2 = customerManager.findCustomerByID(customer2.ID());
 
         List<Car> carsRetnedtoCustomer1 = Arrays.asList(car1, car2);
 
@@ -347,6 +348,10 @@ public class RentlManagerTest {
         }
 
         // Check that previous tests didn't affect data in database
+        car1 = carManager.findCarByID(car1.ID());
+        car2 = carManager.findCarByID(car2.ID());
+        car3 = carManager.findCarByID(car3.ID());
+
         assertCarDeepEquals(carsRetnedtoCustomer1, manager.getAllCustomerCars(customer1));
         assertFalse(customer2.active());
         assertFalse(customer3.active());

@@ -151,17 +151,20 @@ public class RentManagerImplementation implements RentManager {
             session.persist(rent);
             transaction.commit();
             logger.log(Level.INFO, ("New Rent ID " + rent.ID() + " added"));
+            session.close();
 
             carManager.updateCarInfo(car.withStatus(Boolean.FALSE));
             customerManager.updateCustomerInfo(customer.withActive(Boolean.TRUE));
         } catch (Exception ex) {
-            if (transaction != null) {
+            if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
             logger.log(Level.SEVERE, "Error when renting car to customer in RentDB", ex);
             throw new TransactionException("Error when renting car to customer in RentDB", ex);
         } finally {
-            session.close();
+            if (session.isOpen()) {
+                session.close();
+            }
         }
     }
 
