@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 @Table(name = "rents")
 public record Rent(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rent_id_seq")
+    @SequenceGenerator(name = "rent_id_seq", sequenceName = "rent_id_sequence", allocationSize = 1)
     @Column(name = "id")
     Long ID,
 
