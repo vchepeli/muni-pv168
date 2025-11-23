@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Instantiator;
 import java.util.UUID;
 
 @Entity
@@ -26,16 +27,19 @@ public record Car(
     String licensePlate
 ) {
     /**
-     * Compact constructor for validation (empty body means no validation).
-     */
-    public Car {}
-
-    /**
      * Factory method for creating new Car instances with auto-generated UUID.
      * Use this when creating cars to be saved to the database.
      */
     public static Car create(String model, String color, Boolean available, Double rentalPayment, String licensePlate) {
         return new Car(UUID.randomUUID().toString(), model, color, available, rentalPayment, licensePlate);
+    }
+
+    /**
+     * Instantiator method for Hibernate record instantiation.
+     */
+    @Instantiator
+    public static Car of(String ID, String model, String color, Boolean available, Double rentalPayment, String licensePlate) {
+        return new Car(ID, model, color, available, rentalPayment, licensePlate);
     }
 
     public Car withID(String id) {
