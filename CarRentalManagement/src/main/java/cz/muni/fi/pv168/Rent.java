@@ -2,7 +2,6 @@ package cz.muni.fi.pv168;
 
 import java.sql.Date;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Instantiator;
 
 @Entity
 @Table(name = "rents")
@@ -27,11 +26,6 @@ public record Rent(
 ) {
     public Rent() {
         this(null, null, null, null, null);
-    }
-
-    @Instantiator
-    public static Rent of(Long id, Date rentDate, Date dueDate, Long carID, Long customerID) {
-        return new Rent(id, rentDate, dueDate, carID, customerID);
     }
 
     public Rent withID(Long id) {
