@@ -962,7 +962,6 @@ public class MainForm {
                 }
 
                 carTable.refresh();
-                showInfo(localization.getString("info"), "Car marked for update. Click Commit to save changes.");
             } catch (NumberFormatException ex) {
                 showAlert(localization.getString("error"), "Invalid price format. Please enter a number.");
             }
@@ -1035,7 +1034,6 @@ public class MainForm {
             }
 
             customerTable.refresh();
-            showInfo(localization.getString("info"), "Customer marked for update. Click Commit to save changes.");
         }
     }
 
