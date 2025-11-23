@@ -475,7 +475,7 @@ public class MainForm {
                                 showInfo(localization.getString("info"), "Rent marked for deletion. Click Commit to confirm.");
                             } else {
                                 // Note: RentsTableModel doesn't have rentResolved method, so we manually remove
-                                rentsTableModel.getDeletedRents().remove(rent);
+                                rentsTableModel.removeFromDeletedRents(rent);
                                 deleteBtn.setText("Delete");
                                 showInfo(localization.getString("info"), "Rent unmarked for deletion.");
                             }
@@ -732,7 +732,7 @@ public class MainForm {
                     }
                 }
                 // Remove from tracking regardless of whether it was in DB
-                rentsTableModel.getDeletedRents().remove(rent);
+                rentsTableModel.removeFromDeletedRents(rent);
                 rentTable.getItems().remove(rent);
             }
         }

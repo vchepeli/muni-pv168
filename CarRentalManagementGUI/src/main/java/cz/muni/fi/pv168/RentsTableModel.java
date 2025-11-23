@@ -163,4 +163,12 @@ public class RentsTableModel extends AbstractTableModel {
             deletedRents.add(rent);
         }
     }
+
+    public void clearDeletedRents() {
+        deletedRents.clear();
+    }
+
+    public void removeFromDeletedRents(Rent rent) {
+        deletedRents.remove(rent);
+    }
 }
