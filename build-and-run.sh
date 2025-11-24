@@ -41,7 +41,7 @@ echo "Step 3: Running the application..."
 echo ""
 
 # Run the built JAR file
-JAR_FILE="CarRentalManagementGUI/target/car-rental-management-gui-1.0.0.jar"
+JAR_FILE="gui/target/car-rental-gui-1.0.0.jar"
 
 if [ ! -f "$JAR_FILE" ]; then
   echo "Error: JAR file not found at $JAR_FILE"

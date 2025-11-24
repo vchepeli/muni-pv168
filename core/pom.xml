@@ -4,12 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cz.muni.fi</groupId>
-    <artifactId>car-rental-management</artifactId>
+    <parent>
+        <groupId>cz.muni.fi</groupId>
+        <artifactId>car-rental-management-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>car-rental-core</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>CarRentalManagement</name>
+    <name>CarRentalCore</name>
     <description>Business logic layer for Car Rental Management System</description>
 
     <properties>
@@ -68,11 +73,10 @@
             <version>42.7.1</version>
         </dependency>
 
-        <!-- JUnit for testing -->
+        <!-- JUnit 5 for testing -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 

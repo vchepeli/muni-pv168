@@ -37,9 +37,22 @@ public class CarManagerImplementation implements CarManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
+            
+            Query<Long> plateQuery = session.createQuery(
+                "SELECT count(c) FROM Car c WHERE c.licensePlate = :plate", Long.class);
+            plateQuery.setParameter("plate", car.licensePlate());
+            if (plateQuery.uniqueResult() > 0) {
+                throw new IllegalArgumentException("Car with duplicate license plate");
+            }
+
             session.persist(car);
             transaction.commit();
             logger.log(Level.INFO, ("New Car ID " + car.uuid() + " added"));
+        } catch (IllegalArgumentException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw ex;
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -75,6 +88,11 @@ public class CarManagerImplementation implements CarManager {
             session.remove(managedCar);
             transaction.commit();
             logger.log(Level.INFO, ("Car ID " + car.uuid() + " removed"));
+        } catch (IllegalArgumentException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw ex;
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -123,12 +141,26 @@ public class CarManagerImplementation implements CarManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
+            
+            Query<Long> plateQuery = session.createQuery(
+                "SELECT count(c) FROM Car c WHERE c.licensePlate = :plate AND c.uuid != :id", Long.class);
+            plateQuery.setParameter("plate", car.licensePlate());
+            plateQuery.setParameter("id", car.uuid());
+            if (plateQuery.uniqueResult() > 0) {
+                throw new IllegalArgumentException("Car with duplicate license plate");
+            }
+
             if (session.get(Car.class, car.uuid()) == null) {
                 throw new TransactionException("Car with ID " + car.uuid() + " does not exist");
             }
             session.merge(car);
             transaction.commit();
             logger.log(Level.INFO, ("Car ID " + car.uuid() + " updated"));
+        } catch (IllegalArgumentException ex) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw ex;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();

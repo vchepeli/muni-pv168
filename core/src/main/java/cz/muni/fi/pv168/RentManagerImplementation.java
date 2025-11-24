@@ -145,10 +145,30 @@ public class RentManagerImplementation implements RentManager {
              throw new IllegalArgumentException("Car or Customer does not exist");
         }
 
+        if (rent.rentDate().after(rent.dueDate())) {
+            throw new IllegalArgumentException("Rent start date must be before or equal to end date");
+        }
+
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
+            
+            // Check for overlapping rents for the same car
+            Query<Long> overlapQuery = session.createQuery(
+                "SELECT count(r) FROM Rent r WHERE r.carID = :carId AND " +
+                "((:start BETWEEN r.rentDate AND r.dueDate) OR " +
+                "(:end BETWEEN r.rentDate AND r.dueDate) OR " +
+                "(r.rentDate BETWEEN :start AND :end))", Long.class);
+            
+            overlapQuery.setParameter("carId", rent.carID());
+            overlapQuery.setParameter("start", rent.rentDate());
+            overlapQuery.setParameter("end", rent.dueDate());
+            
+            if (overlapQuery.uniqueResult() > 0) {
+                throw new IllegalArgumentException("Car is already rented for the selected period");
+            }
+
             session.persist(rent);
             transaction.commit();
             logger.log(Level.INFO, ("New Rent ID " + rent.uuid() + " added"));
@@ -156,6 +176,11 @@ public class RentManagerImplementation implements RentManager {
 
             carManager.updateCarInfo(car.withStatus(Boolean.FALSE));
             customerManager.updateCustomerInfo(customer.withActive(Boolean.TRUE));
+        } catch (IllegalArgumentException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw ex;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
@@ -171,6 +196,12 @@ public class RentManagerImplementation implements RentManager {
 
     @Override
     public void rentCarToCustomer(Car car, Customer customer, Date rentDate, Date dueDate) throws IllegalArgumentException, TransactionException {
+        if (car == null) {
+            throw new IllegalArgumentException("Car argument is null");
+        }
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer argument is null");
+        }
         // Delegate to addRent by creating a new Rent object (maintaining legacy behavior if needed, though mostly unused now)
         Rent rent = Rent.create(rentDate, dueDate, car.uuid(), customer.uuid());
         addRent(rent);
@@ -211,6 +242,11 @@ public class RentManagerImplementation implements RentManager {
                 customerManager.updateCustomerInfo(customer);
             }
             carManager.updateCarInfo(car.withStatus(true));
+        } catch (IllegalArgumentException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw ex;
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -231,16 +267,43 @@ public class RentManagerImplementation implements RentManager {
             throw new IllegalArgumentException("Can't update rent with NULL ID");
         }
 
+        if (rent.rentDate().after(rent.dueDate())) {
+            throw new IllegalArgumentException("Rent start date must be before or equal to end date");
+        }
+
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
+            
+            // Check for overlapping rents for the same car
+            Query<Long> overlapQuery = session.createQuery(
+                "SELECT count(r) FROM Rent r WHERE r.carID = :carId AND " +
+                "r.id != :rentId AND " + // Exclude itself for updates (though UUID is unique, good practice)
+                "((:start BETWEEN r.rentDate AND r.dueDate) OR " +
+                "(:end BETWEEN r.rentDate AND r.dueDate) OR " +
+                "(r.rentDate BETWEEN :start AND :end))", Long.class);
+            
+            overlapQuery.setParameter("carId", rent.carID());
+            overlapQuery.setParameter("rentId", rent.uuid());
+            overlapQuery.setParameter("start", rent.rentDate());
+            overlapQuery.setParameter("end", rent.dueDate());
+            
+            if (overlapQuery.uniqueResult() > 0) {
+                throw new IllegalArgumentException("Car is already rented for the selected period");
+            }
+
             if (session.get(Rent.class, rent.uuid()) == null) {
                 throw new TransactionException("Rent with ID " + rent.uuid() + " does not exist in DB");
             }
             session.merge(rent);
             transaction.commit();
             logger.log(Level.INFO, ("Rent ID " + rent.uuid() + " updated"));
+        } catch (IllegalArgumentException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw ex;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();

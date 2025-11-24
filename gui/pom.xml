@@ -4,12 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cz.muni.fi</groupId>
-    <artifactId>car-rental-management-gui</artifactId>
+    <parent>
+        <groupId>cz.muni.fi</groupId>
+        <artifactId>car-rental-management-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>car-rental-gui</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>CarRentalManagementGUI</name>
+    <name>CarRentalGUI</name>
     <description>JavaFX GUI for Car Rental Management System</description>
 
     <properties>
@@ -23,7 +28,7 @@
         <!-- Business Logic Layer -->
         <dependency>
             <groupId>cz.muni.fi</groupId>
-            <artifactId>car-rental-management</artifactId>
+            <artifactId>car-rental-core</artifactId>
             <version>1.0.0</version>
         </dependency>
 
@@ -81,6 +86,13 @@
             <artifactId>derbynet</artifactId>
             <version>10.15.2.0</version>
         </dependency>
+
+        <!-- JUnit 5 for testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -109,7 +121,7 @@
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>cz.muni.fi.pv168.CarRentalManagementGUI</mainClass>
+                                    <mainClass>cz.muni.fi.pv168.MainForm</mainClass>
                                 </transformer>
                             </transformers>
                             <filters>
@@ -132,7 +144,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>cz.muni.fi.pv168.CarRentalManagementGUI</mainClass>
+                    <mainClass>cz.muni.fi.pv168.MainForm</mainClass>
                 </configuration>
             </plugin>
 
@@ -143,7 +155,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>cz.muni.fi.pv168.CarRentalManagementGUI</mainClass>
+                            <mainClass>cz.muni.fi.pv168.MainForm</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -36,9 +36,22 @@ public class CustomerManagerImplementation implements CustomerManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
+            
+            Query<Long> licenseQuery = session.createQuery(
+                "SELECT count(c) FROM Customer c WHERE c.driversLicense = :license", Long.class);
+            licenseQuery.setParameter("license", customer.driversLicense());
+            if (licenseQuery.uniqueResult() > 0) {
+                throw new IllegalArgumentException("Customer with duplicate driver's license");
+            }
+
             session.persist(customer);
             transaction.commit();
             logger.log(Level.INFO, ("New Customer ID " + customer.uuid() + " added"));
+        } catch (IllegalArgumentException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw ex;
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -73,6 +86,11 @@ public class CustomerManagerImplementation implements CustomerManager {
             session.remove(managedCustomer);
             transaction.commit();
             logger.log(Level.INFO, ("Customer ID " + customer.uuid() + " removed"));
+        } catch (IllegalArgumentException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw ex;
         } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
@@ -133,12 +151,26 @@ public class CustomerManagerImplementation implements CustomerManager {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
+            
+            Query<Long> licenseQuery = session.createQuery(
+                "SELECT count(c) FROM Customer c WHERE c.driversLicense = :license AND c.uuid != :id", Long.class);
+            licenseQuery.setParameter("license", customer.driversLicense());
+            licenseQuery.setParameter("id", customer.uuid());
+            if (licenseQuery.uniqueResult() > 0) {
+                throw new IllegalArgumentException("Customer with duplicate driver's license");
+            }
+
             if (session.get(Customer.class, customer.uuid()) == null) {
                 throw new TransactionException("Customer with ID " + customer.uuid() + " does not exist");
             }
             session.merge(customer);
             transaction.commit();
             logger.log(Level.INFO, ("Customer ID " + customer.uuid() + " updated"));
+        } catch (IllegalArgumentException ex) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw ex;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
